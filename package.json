@@ -1,0 +1,19 @@
+{
+  "name": "multi-channel-commerce",
+  "version": "1.0.0",
+  "description": "Multi-channel commerce system with microservices",
+  "private": true,
+  "workspaces": [
+    "services/*",
+    "apps/*",
+    "shared/*",
+    "prisma"
+  ],
+  "scripts": {
+    "install-all": "yarn install",
+    "build": "yarn workspaces run build",
+    "dev": "yarn workspaces run dev",
+    "test": "yarn workspaces run test",
+    "lint": "yarn workspaces run lint"
+  }
+}
