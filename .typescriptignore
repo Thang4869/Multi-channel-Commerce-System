@@ -1,0 +1,22 @@
+# TypeScript Ignore Rules
+
+# Ignore all node_modules
+
+node_modules/**
+
+# Ignore build outputs
+
+dist/**
+build/**
+.next/**
+
+# Ignore cache
+
+.eslintcache
+*.tsbuildinfo
+
+# Ignore generated files
+
+*.d.ts
+*.js
+!src/**/*.js
