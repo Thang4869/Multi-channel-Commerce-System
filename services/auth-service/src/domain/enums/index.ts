@@ -1,0 +1,28 @@
+// ============================================
+// DOMAIN - ENUMS
+// ============================================
+
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  WAREHOUSE_MANAGER = 'WAREHOUSE_MANAGER',
+  STORE_MANAGER = 'STORE_MANAGER',
+  SHIPPER = 'SHIPPER',
+  CUSTOMER = 'CUSTOMER',
+  SUPPLIER = 'SUPPLIER',
+}
+
+export enum TokenType {
+  ACCESS = 'ACCESS',
+  REFRESH = 'REFRESH',
+}
+
+export enum AuthErrorCode {
+  USER_NOT_FOUND = 'USER_NOT_FOUND',
+  INVALID_PASSWORD = 'INVALID_PASSWORD',
+  EMAIL_ALREADY_EXISTS = 'EMAIL_ALREADY_EXISTS',
+  INVALID_TOKEN = 'INVALID_TOKEN',
+  TOKEN_EXPIRED = 'TOKEN_EXPIRED',
+  UNAUTHORIZED = 'UNAUTHORIZED',
+  FORBIDDEN = 'FORBIDDEN',
+  USER_INACTIVE = 'USER_INACTIVE',
+}
