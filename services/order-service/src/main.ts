@@ -5,7 +5,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { OrderModule } from './order.module';
+import { OrderModule } from './modules/order/order.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(OrderModule);

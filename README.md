@@ -1,56 +1,56 @@
-# Multi-Channel Commerce System
+﻿# Multi-Channel Commerce System
 
 > **Complete Microservices Architecture** with Clean Architecture, Docker, and Full-Stack Integration
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 ```
 
-┌─────────────────────────────────────────────────────────────────┐
-│                    FRONTEND LAYER                                │
-├──────────────────────────┬──────────────────┬───────────────────┤
-│ Warehouse Dashboard      │ Store Websites   │ Mobile Apps       │
-│ (Next.js)                │ (Next.js)        │ (Flutter)         │
-│ Port: 3010               │ Port: 3011+      │ Port: 5000+       │
-└──────────────────────────┴──────────────────┴───────────────────┘
-                                   ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                    API GATEWAY (Nginx)                           │
-│                    Port: 80, 443                                 │
-└─────────────────────────────────────────────────────────────────┘
-                                   ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                    MICROSERVICES LAYER                           │
-├──────────────┬────────────┬──────────┬───────────┬──────────────┤
-│ Auth Service │ Order Svc  │ Product  │ Inventory │ Delivery     │
-│ Port: 3001   │ Port: 3002 │ Port: 3003 │ Port: 3004 │ Port: 3005  │
-├──────────────┼────────────┼──────────┼───────────┼──────────────┤
-│ User Service │ Warehouse  │ Notif    │ POS       │ Analytics    │
-│ Port: 3006   │ Port: 3007 │ Port: 3008 │ Port: 3009 │ Port: 3011   │
-└──────────────┴────────────┴──────────┴───────────┴──────────────┘
-                                   ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                    DATA LAYER                                    │
-├──────────────────────────┬──────────────────────────────────────┤
-│ PostgreSQL Database      │ Redis Cache & Sessions              │
-│ Port: 5432               │ Port: 6379                           │
-└──────────────────────────┴──────────────────────────────────────┘
+
+                    FRONTEND LAYER                                
+
+ Warehouse Dashboard       Store Websites    Mobile Apps       
+ (Next.js)                 (Next.js)         (Flutter)         
+ Port: 3010                Port: 3011+       Port: 5000+       
+
+                                   
+
+                    API GATEWAY (Nginx)                           
+                    Port: 80, 443                                 
+
+                                   
+
+                    MICROSERVICES LAYER                           
+
+ Auth Service  Order Svc   Product   Inventory  Delivery     
+ Port: 3001    Port: 3002  Port: 3003  Port: 3004  Port: 3005  
+
+ User Service  Warehouse   Notif     POS        Analytics    
+ Port: 3006    Port: 3007  Port: 3008  Port: 3009  Port: 3011   
+
+                                   
+
+                    DATA LAYER                                    
+
+ PostgreSQL Database       Redis Cache & Sessions              
+ Port: 5432                Port: 6379                           
+
 
 ```
 
-## 📋 Prerequisites
+## Prerequisites
 
 - **Docker & Docker Compose** (v20.10+)
 - **Node.js** (v20 LTS) - for local development
 - **Flutter SDK** (v3.0+) - for mobile development
 - **Git** (v2.0+)
 
-## ⚠️ IDE Errors? Read This First
+## IDE Errors? Read This First
 
 If you see 256 TypeScript errors in VS Code:
 - **These are IDE errors only, NOT runtime errors**
 - **System will run perfectly with Docker**
-- See **[IDE_ERRORS.md](IDE_ERRORS.md)** for detailed fix
+- See **[docs/runbooks/fixes/errors-fix.md](docs/runbooks/fixes/errors-fix.md)** for detailed fix
 
 TL;DR:
 
@@ -63,7 +63,7 @@ yarn install              # 2 minutes
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Option 1: Docker Compose (Recommended)
 
@@ -95,9 +95,9 @@ docker-compose ps
 ```
 
 **Services will be available at:**
-- 🏠 **Dashboard**: http://localhost:3010
-- 🔐 **API Gateway**: http://localhost
-- 📚 **Swagger Docs**: http://localhost:3001/api/docs
+- **Dashboard**: http://localhost:3010
+- **API Gateway**: http://localhost
+- **Swagger Docs**: http://localhost:3001/api/docs
 
 ### Option 2: Local Development
 
@@ -138,7 +138,7 @@ yarn dev
 
 ```
 
-## 📖 API Documentation
+## API Documentation
 
 ### Authentication
 
@@ -205,7 +205,7 @@ curl -X PATCH http://localhost:3002/orders/:orderId/status \
 
 ```
 
-## 🗄️ Database Schema
+## Database Schema
 
 ### Key Tables
 
@@ -218,9 +218,9 @@ curl -X PATCH http://localhost:3002/orders/:orderId/status \
 - **deliveries** - Delivery tracking
 - **notifications** - User notifications
 
-View full schema: `prisma/schema.prisma`
+View full schema: `database/schema.prisma`
 
-## 📱 Mobile App Setup
+## Mobile App Setup
 
 ### iOS
 
@@ -247,7 +247,7 @@ flutter build apk --release
 
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 
@@ -283,7 +283,7 @@ NEXT_PUBLIC_API_URL=http://localhost:3001
 
 ```
 
-## 📊 Monitoring & Logging
+## Monitoring & Logging
 
 ### View Logs
 
@@ -322,7 +322,7 @@ docker-compose exec postgres pg_isready
 
 ```
 
-## 🧪 Testing
+## Testing
 
 ### Unit Tests
 
@@ -350,7 +350,7 @@ docker-compose exec auth-service yarn test:integration
 
 ```
 
-## 🚢 Deployment
+## Deployment
 
 ### Docker Registry
 
@@ -392,7 +392,7 @@ kubectl get svc
 
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Port Already in Use
 
@@ -429,90 +429,90 @@ CORS_ORIGIN=http://your-frontend-url
 
 ```
 
-## 📚 Project Structure
+## Project Structure
 
 ```
 
 .
-├── apps/
-│   ├── web/
-│   │   ├── warehouse-dashboard/      # Main dashboard
+ apps/
+    web/
+       warehouse-dashboard/      # Main dashboard
 
-│   │   ├── shoe-store/              # Shoe e-commerce
+       shoe-store/              # Shoe e-commerce
 
-│   │   ├── clothing-store/          # Clothing e-commerce
+       clothing-store/          # Clothing e-commerce
 
-│   │   └── computer-store/          # Computer e-commerce
+       computer-store/          # Computer e-commerce
 
-│   └── mobile/
-│       └── delivery-mobile-app/     # Flutter delivery app
+    mobile/
+        delivery-mobile-app/     # Flutter delivery app
 
-├── services/
-│   ├── auth-service/                # Authentication & JWT
+ services/
+    auth-service/                # Authentication & JWT
 
-│   ├── order-service/               # Order management
+    order-service/               # Order management
 
-│   ├── product-service/             # Product catalog
+    product-service/             # Product catalog
 
-│   ├── inventory-service/           # Stock management
+    inventory-service/           # Stock management
 
-│   ├── warehouse-service/           # Warehouse operations
+    warehouse-service/           # Warehouse operations
 
-│   ├── delivery-service/            # Delivery tracking
+    delivery-service/            # Delivery tracking
 
-│   ├── notification-service/        # Notifications
+    notification-service/        # Notifications
 
-│   └── user-service/                # User management
+    user-service/                # User management
 
-├── shared/
-│   ├── types/                       # TypeScript types
+ packages/
+   types/                       # TypeScript shared types
 
-│   ├── contracts/                   # API contracts
+ infrastructure/
+    docker/                      # Docker files
 
-│   └── utils/                       # Shared utilities
+    nginx/                       # API Gateway config
 
-├── infrastructure/
-│   ├── docker/                      # Docker files
+    k8s/                         # Kubernetes configs
 
-│   ├── nginx/                       # API Gateway config
+    scripts/                     # Utility scripts
 
-│   ├── k8s/                         # Kubernetes configs
+ docs/
+    architecture/                # Architecture docs
 
-│   └── scripts/                     # Utility scripts
+    erd/                         # Database diagrams
 
-├── docs/
-│   ├── architecture/                # Architecture docs
+    flows/                       # Business flows
 
-│   ├── erd/                         # Database diagrams
-
-│   └── flows/                       # Business flows
-
-└── .github/
-    └── workflows/                   # CI/CD pipelines
+ .github/
+     workflows/                   # CI/CD pipelines
 
 ```
 
-## 🤝 Contributing
+## Contributing
 
 1. Create a feature branch: `git checkout -b feature/amazing-feature`
 2. Commit changes: `git commit -m 'Add amazing feature'`
 3. Push to branch: `git push origin feature/amazing-feature`
 4. Open a Pull Request
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see LICENSE file for details.
 
-## 📞 Support
+## Support
 
-- 📧 Email: support@ecommerce.local
-- 📖 Docs: http://localhost:3001/api/docs
-- 🐛 Issues: https://github.com/project/issues
+- d Email: support@ecommerce.local
+- d Docs: http://localhost:3001/api/docs
+- d Issues: https://github.com/project/issues
 
 ---
 
 **Last Updated**: April 2026  
 **Version**: 1.0.0  
-**Status**: Production Ready ✅
+**Status**: Production Ready 
 
 ```
+
+
+
+

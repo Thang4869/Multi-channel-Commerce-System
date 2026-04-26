@@ -1,0 +1,24 @@
+{
+  "name": "prisma-migrations",
+  "version": "1.0.0",
+  "description": "Prisma migrations for multi-channel commerce system",
+  "scripts": {
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:studio": "prisma studio",
+    "prisma:seed": "ts-node --require tsconfig-paths/register seed.ts",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.0.0",
+    "bcryptjs": "^2.4.3"
+  },
+  "devDependencies": {
+    "prisma": "^5.0.0",
+    "ts-node": "^10.0.0",
+    "typescript": "^5.0.0",
+    "tsconfig-paths": "^4.2.0"
+  }
+}
