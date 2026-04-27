@@ -1,0 +1,38 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Auth Service Debug",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/services/auth-service/dist/main.js",
+      "restart": true,
+      "runtimeArgs": ["-r", "ts-node/register"],
+      "cwd": "${workspaceFolder}/services/auth-service",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Order Service Debug",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/services/order-service/dist/main.js",
+      "restart": true,
+      "cwd": "${workspaceFolder}/services/order-service",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Docker Compose Up",
+      "type": "node",
+      "request": "launch",
+      "program": "/usr/bin/docker-compose",
+      "args": ["up", "-d"],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

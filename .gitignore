@@ -31,9 +31,10 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# IDE
 .idea/
-.vscode/
+# moved IDE workspace settings
+# keep workspace settings ignored under config/
+config/.vscode/
 *.swp
 *.swo
 *~
