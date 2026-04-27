@@ -16,4 +16,8 @@
     "test": "yarn workspaces run test",
     "lint": "yarn workspaces run lint"
   }
+  ,
+  "markdownlintConfig": {
+    "extends": "./config/.markdownlint.json"
+  }
 }
