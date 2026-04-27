@@ -3,6 +3,6 @@
   "hints": {
     "typescript-config/strict": "off"
   },
-  "ignoreFile": "./.webhintignore"
+  "ignoreFile": "./config/.webhintignore"
 }
 

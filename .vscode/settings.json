@@ -1,0 +1,43 @@
+{
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.check.npmIsInstalled": false,
+  "typescript.disableAutomaticTypeAcquisition": true,
+  "typescript.reportStyleChecksAsWarnings": false,
+  "typescript.validate.enable": true,
+  "javascript.validate.enable": true,
+  "json.validate.enable": true,
+  "json.schemaValidation": "warning",
+  "webhint.enableTelemetry": false,
+  "webhint.enable": true,
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.validate": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false
+  },
+  "markdown.linting.enabled": false,
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/.git": true,
+    "**/.DS_Store": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "dist": true,
+    "build": true
+  },
+  "docker.languageserver.diagnostics.enabled": false,
+  "docker.showExtensionRecommendations": false,
+  "[dockerfile]": {
+    "editor.validate": false
+  }
+}

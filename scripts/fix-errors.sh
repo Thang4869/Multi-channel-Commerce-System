@@ -7,9 +7,9 @@
 echo "🔧 Fixing TypeScript and Dependency Errors..."
 echo ""
 
-# Create .vscode settings to suppress type errors
-mkdir -p .vscode
-cat > .vscode/settings.json << 'EOF'
+# Create config/.vscode settings to suppress type errors
+mkdir -p config/.vscode
+cat > config/.vscode/settings.json << 'EOF'
 {
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsdk": "node_modules/typescript/lib",
@@ -25,7 +25,7 @@ cat > .vscode/settings.json << 'EOF'
 }
 EOF
 
-echo "✅ Created .vscode/settings.json"
+echo "✅ Created config/.vscode/settings.json"
 echo ""
 
 # Create empty node_modules structure to suppress some errors
