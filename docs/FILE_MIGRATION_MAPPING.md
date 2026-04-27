@@ -27,7 +27,7 @@ services/*/src/modules/             → services/*/src/modules/ (layer structure
 .gitignore                          → .gitignore
 .eslintignore                       → .eslintignore
 .prettierignore                     → .prettierignore
-.markdownlint.json                  → .markdownlint.json
+.markdownlint.json                  → config/.markdownlint.json
 docker-compose.yml                  → docker-compose.yml
 yarn.lock                           → yarn.lock
 README.md                           → README.md (update references)
