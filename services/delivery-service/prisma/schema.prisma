@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Delivery {
+  id                     String   @id @default(cuid())
+  orderId                String   @unique
+  shipperId              String?
+  status                 String   @default("PENDING")
+  currentLocationLat     Decimal? @db.Decimal(10, 8)
+  currentLocationLng     Decimal? @db.Decimal(11, 8)
+  currentLocationAddress String?
+  destLocationLat        Decimal  @db.Decimal(10, 8)
+  destLocationLng        Decimal  @db.Decimal(11, 8)
+  destLocationAddress    String
+  estimatedDeliveryTime  DateTime
+  actualDeliveryTime     DateTime?
+  notes                  String?  @db.Text
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  tracking DeliveryTracking[]
+
+  @@index([orderId])
+  @@index([shipperId])
+  @@index([status])
+  @@map("deliveries")
+}
+
+model DeliveryTracking {
+  id         String   @id @default(cuid())
+  deliveryId String
+  lat        Decimal  @db.Decimal(10, 8)
+  lng        Decimal  @db.Decimal(11, 8)
+  address    String?
+  status     String
+  notes      String?  @db.Text
+  timestamp  DateTime @default(now())
+
+  delivery Delivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+
+  @@index([deliveryId])
+  @@map("delivery_tracking")
+}
