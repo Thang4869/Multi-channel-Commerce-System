@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model WarehouseStock {
+  id            String   @id @default(cuid())
+  warehouseId   String
+  productId     String
+  quantity      Int      @default(0)
+  reserved      Int      @default(0)
+  available     Int      @default(0)
+  lastRestocked DateTime?
+  updatedAt     DateTime @updatedAt
+
+  @@unique([warehouseId, productId])
+  @@index([warehouseId])
+  @@index([productId])
+  @@map("warehouse_stocks")
+}
+
+model StoreStock {
+  id           String   @id @default(cuid())
+  storeId      String
+  productId    String
+  quantity     Int      @default(0)
+  reserved     Int      @default(0)
+  available    Int      @default(0)
+  minThreshold Int      @default(10)
+  lastUpdated  DateTime @updatedAt
+
+  @@unique([storeId, productId])
+  @@index([storeId])
+  @@index([productId])
+  @@map("store_stocks")
+}
+
+model InventoryLock {
+  id         String   @id @default(cuid())
+  orderId    String
+  productId  String
+  quantity   Int
+  status     String   @default("RESERVED")
+  createdAt  DateTime @default(now())
+  releasedAt DateTime?
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("inventory_locks")
+}
+
+model InventoryTransaction {
+  id          String   @id @default(cuid())
+  warehouseId String
+  productId   String
+  quantity    Int
+  type        String
+  referenceId String?
+  notes       String?  @db.Text
+  createdAt   DateTime @default(now())
+
+  @@index([warehouseId])
+  @@index([productId])
+  @@index([type])
+  @@map("inventory_transactions")
+}

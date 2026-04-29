@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Warehouse {
+  id          String   @id @default(cuid())
+  name        String
+  location    String
+  capacity    Int
+  currentLoad Int      @default(0)
+  managerId   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("warehouses")
+}
+
+model WarehouseTransaction {
+  id          String   @id @default(cuid())
+  warehouseId String
+  productId   String
+  quantity    Int
+  type        String
+  referenceId String?
+  notes       String?  @db.Text
+  createdAt   DateTime @default(now())
+
+  @@index([warehouseId])
+  @@index([productId])
+  @@index([type])
+  @@map("warehouse_transactions")
+}
+
+model WarehouseDistribution {
+  id                String   @id @default(cuid())
+  warehouseId       String
+  storeId           String
+  productId         String
+  quantity          Int
+  status            String   @default("PENDING")
+  estimatedDelivery DateTime?
+  actualDelivery    DateTime?
+  notes             String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([warehouseId])
+  @@index([storeId])
+  @@index([status])
+  @@map("warehouse_distributions")
+}
