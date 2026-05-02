@@ -1,18 +1,18 @@
 # ============================================
-# DOCKERFILE - ORDER SERVICE
+# DOCKERFILE - INVENTORY SERVICE
 # ============================================
 
 FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-COPY services/order-service/package.json .
-COPY services/order-service/tsconfig.json .
-COPY services/order-service/prisma ./prisma
+COPY services/inventory-service/package.json .
+COPY services/inventory-service/tsconfig.json .
+COPY services/inventory-service/prisma ./prisma
 RUN yarn install
 RUN npx prisma generate
 
-COPY services/order-service/src ./src
+COPY services/inventory-service/src ./src
 
 RUN yarn build
 
@@ -22,8 +22,8 @@ WORKDIR /app
 
 RUN apk add --no-cache dumb-init
 
-COPY services/order-service/package.json .
-COPY services/order-service/prisma ./prisma
+COPY services/inventory-service/package.json .
+COPY services/inventory-service/prisma ./prisma
 RUN yarn install --production
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
@@ -35,7 +35,7 @@ RUN addgroup -g 1001 -S nodejs && \
 
 USER nodejs
 
-EXPOSE 3002
+EXPOSE 3004
 
 ENTRYPOINT ["dumb-init", "--"]
 CMD ["node", "dist/main.js"]
