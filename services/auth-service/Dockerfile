@@ -9,7 +9,9 @@ WORKDIR /app
 # Copy package files
 COPY services/auth-service/package.json .
 COPY services/auth-service/tsconfig.json .
+COPY services/auth-service/prisma ./prisma
 RUN yarn install
+RUN npx prisma generate
 
 # Copy source
 COPY services/auth-service/src ./src
@@ -27,7 +29,10 @@ RUN apk add --no-cache dumb-init
 
 # Copy package files
 COPY services/auth-service/package.json .
+COPY services/auth-service/prisma ./prisma
 RUN yarn install --production
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
 # Copy built app
 COPY --from=builder /app/dist ./dist

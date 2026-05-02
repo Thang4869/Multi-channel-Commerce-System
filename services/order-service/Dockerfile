@@ -8,7 +8,9 @@ WORKDIR /app
 
 COPY services/order-service/package.json .
 COPY services/order-service/tsconfig.json .
+COPY services/order-service/prisma ./prisma
 RUN yarn install
+RUN npx prisma generate
 
 COPY services/order-service/src ./src
 
@@ -21,7 +23,10 @@ WORKDIR /app
 RUN apk add --no-cache dumb-init
 
 COPY services/order-service/package.json .
+COPY services/order-service/prisma ./prisma
 RUN yarn install --production
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
 COPY --from=builder /app/dist ./dist
 
