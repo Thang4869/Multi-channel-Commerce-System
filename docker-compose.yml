@@ -47,7 +47,7 @@ services:
     environment:
       NODE_ENV: development
       PORT: 3001
-      DATABASE_URL: postgresql://postgres:password@postgres:5432/commerce_db
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/commerce_db?schema=public
       JWT_SECRET: your-super-secret-jwt-key-change-in-production
       JWT_REFRESH_SECRET: your-super-secret-refresh-key-change-in-production
       REDIS_URL: redis://redis:6379
@@ -71,7 +71,7 @@ services:
     environment:
       NODE_ENV: development
       PORT: 3002
-      DATABASE_URL: postgresql://postgres:password@postgres:5432/commerce_db
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/commerce_db?schema=order_schema
       JWT_SECRET: your-super-secret-jwt-key-change-in-production
       REDIS_URL: redis://redis:6379
       CORS_ORIGIN: http://localhost:3010,http://localhost:3000
@@ -205,7 +205,7 @@ services:
       dockerfile: apps/web/warehouse-dashboard/Dockerfile
     container_name: warehouse_dashboard
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:3001
+      NEXT_PUBLIC_API_URL: http://localhost
     ports:
       - "3010:3010"
     depends_on:
