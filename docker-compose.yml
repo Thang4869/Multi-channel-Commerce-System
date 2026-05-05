@@ -85,6 +85,119 @@ services:
     volumes:
       - ./services/order-service/src:/app/src
 
+  # Product Service
+  product-service:
+    build:
+      context: .
+      dockerfile: services/product-service/Dockerfile
+    container_name: product_service
+    environment:
+      NODE_ENV: development
+      PORT: 3003
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/commerce_db?schema=product_schema
+      REDIS_URL: redis://redis:6379
+      CORS_ORIGIN: http://localhost:3010,http://localhost:3000
+    ports:
+      - "3003:3003"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./services/product-service/src:/app/src
+
+  # Inventory Service
+  inventory-service:
+    build:
+      context: .
+      dockerfile: services/inventory-service/Dockerfile
+    container_name: inventory_service
+    environment:
+      NODE_ENV: development
+      PORT: 3004
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/commerce_db?schema=inventory_schema
+      REDIS_URL: redis://redis:6379
+      CORS_ORIGIN: http://localhost:3010,http://localhost:3000
+    ports:
+      - "3004:3004"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./services/inventory-service/src:/app/src
+
+  # Delivery Service
+  delivery-service:
+    build:
+      context: .
+      dockerfile: services/delivery-service/Dockerfile
+    container_name: delivery_service
+    environment:
+      NODE_ENV: development
+      PORT: 3005
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/commerce_db?schema=delivery_schema
+      REDIS_URL: redis://redis:6379
+      CORS_ORIGIN: http://localhost:3010,http://localhost:3000
+    ports:
+      - "3005:3005"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./services/delivery-service/src:/app/src
+
+  # Warehouse Service
+  warehouse-service:
+    build:
+      context: .
+      dockerfile: services/warehouse-service/Dockerfile
+    container_name: warehouse_service
+    environment:
+      NODE_ENV: development
+      PORT: 3006
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/commerce_db?schema=warehouse_schema
+      INVENTORY_SERVICE_URL: http://inventory-service:3004
+      REDIS_URL: redis://redis:6379
+      CORS_ORIGIN: http://localhost:3010,http://localhost:3000
+    ports:
+      - "3006:3006"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      inventory-service:
+        condition: service_started
+    volumes:
+      - ./services/warehouse-service/src:/app/src
+
+  # Notification Service
+  notification-service:
+    build:
+      context: .
+      dockerfile: services/notification-service/Dockerfile
+    container_name: notification_service
+    environment:
+      NODE_ENV: development
+      PORT: 3008
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/commerce_db?schema=notification_schema
+      REDIS_URL: redis://redis:6379
+      CORS_ORIGIN: http://localhost:3010,http://localhost:3000
+    ports:
+      - "3008:3008"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./services/notification-service/src:/app/src
+
   # Warehouse Dashboard (Next.js)
   warehouse-dashboard:
     build:
@@ -98,6 +211,7 @@ services:
     depends_on:
       - auth-service
       - order-service
+      - product-service
 
   # API Gateway (Nginx)
   nginx:
@@ -112,6 +226,11 @@ services:
     depends_on:
       - auth-service
       - order-service
+      - product-service
+      - inventory-service
+      - delivery-service
+      - warehouse-service
+      - notification-service
       - warehouse-dashboard
 
 volumes:
