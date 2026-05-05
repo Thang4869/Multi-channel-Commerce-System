@@ -45,6 +45,8 @@ jobs:
 
     - name: Install dependencies
       run: yarn install
+      env:
+        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=public
 
     # Auth Service
     - name: Lint Auth Service
@@ -54,7 +56,7 @@ jobs:
     - name: Build Auth Service
       run: cd services/auth-service && yarn build
       env:
-        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db
+        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=public
         JWT_SECRET: test-secret
         JWT_REFRESH_SECRET: test-refresh-secret
 
@@ -66,14 +68,44 @@ jobs:
     - name: Build Order Service
       run: cd services/order-service && yarn build
       env:
-        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db
+        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=order_schema
         JWT_SECRET: test-secret
+
+    # Product Service
+    - name: Build Product Service
+      run: cd services/product-service && yarn build
+      env:
+        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=product_schema
+
+    # Inventory Service
+    - name: Build Inventory Service
+      run: cd services/inventory-service && yarn build
+      env:
+        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=inventory_schema
+
+    # Delivery Service
+    - name: Build Delivery Service
+      run: cd services/delivery-service && yarn build
+      env:
+        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=delivery_schema
+
+    # Warehouse Service
+    - name: Build Warehouse Service
+      run: cd services/warehouse-service && yarn build
+      env:
+        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=warehouse_schema
+
+    # Notification Service
+    - name: Build Notification Service
+      run: cd services/notification-service && yarn build
+      env:
+        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=notification_schema
 
     # Warehouse Dashboard
     - name: Build Warehouse Dashboard
       run: cd apps/web/warehouse-dashboard && yarn build
       env:
-        NEXT_PUBLIC_API_URL: http://localhost:3001
+        NEXT_PUBLIC_API_URL: http://localhost
 
   docker-build:
     needs: lint-and-test
@@ -101,6 +133,46 @@ jobs:
         file: services/order-service/Dockerfile
         push: false
         tags: commerce/order-service:latest
+
+    - name: Build Product Service Image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: services/product-service/Dockerfile
+        push: false
+        tags: commerce/product-service:latest
+
+    - name: Build Inventory Service Image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: services/inventory-service/Dockerfile
+        push: false
+        tags: commerce/inventory-service:latest
+
+    - name: Build Delivery Service Image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: services/delivery-service/Dockerfile
+        push: false
+        tags: commerce/delivery-service:latest
+
+    - name: Build Warehouse Service Image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: services/warehouse-service/Dockerfile
+        push: false
+        tags: commerce/warehouse-service:latest
+
+    - name: Build Notification Service Image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: services/notification-service/Dockerfile
+        push: false
+        tags: commerce/notification-service:latest
 
     - name: Build Warehouse Dashboard Image
       uses: docker/build-push-action@v4
