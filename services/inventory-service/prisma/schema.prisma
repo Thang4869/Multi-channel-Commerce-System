@@ -1,10 +1,12 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["inventory_schema"]
 }
 
 model WarehouseStock {
@@ -20,6 +22,7 @@ model WarehouseStock {
   @@unique([warehouseId, productId])
   @@index([warehouseId])
   @@index([productId])
+  @@schema("inventory_schema")
   @@map("warehouse_stocks")
 }
 
@@ -36,6 +39,7 @@ model StoreStock {
   @@unique([storeId, productId])
   @@index([storeId])
   @@index([productId])
+  @@schema("inventory_schema")
   @@map("store_stocks")
 }
 
@@ -50,6 +54,7 @@ model InventoryLock {
 
   @@index([orderId])
   @@index([productId])
+  @@schema("inventory_schema")
   @@map("inventory_locks")
 }
 
@@ -66,5 +71,6 @@ model InventoryTransaction {
   @@index([warehouseId])
   @@index([productId])
   @@index([type])
+  @@schema("inventory_schema")
   @@map("inventory_transactions")
 }

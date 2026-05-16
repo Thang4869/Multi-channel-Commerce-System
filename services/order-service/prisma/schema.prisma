@@ -1,10 +1,12 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["order_schema"]
 }
 
 model Order {
@@ -23,6 +25,7 @@ model Order {
 
   @@index([customerId])
   @@index([status])
+  @@schema("order_schema")
   @@map("orders")
 }
 
@@ -39,5 +42,6 @@ model OrderItem {
 
   @@index([orderId])
   @@index([productId])
+  @@schema("order_schema")
   @@map("order_items")
 }
