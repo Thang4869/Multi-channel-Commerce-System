@@ -140,6 +140,7 @@ services:
       PORT: 3005
       DATABASE_URL: postgresql://postgres:password@postgres:5432/commerce_db?schema=delivery_schema
       REDIS_URL: redis://redis:6379
+      ORDER_SERVICE_URL: http://order-service:3002
       CORS_ORIGIN: http://localhost:3010,http://localhost:3000
     ports:
       - "3005:3005"
