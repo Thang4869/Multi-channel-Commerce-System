@@ -1,5 +1,7 @@
 # HƯỚNG DẪN KỸ THUẬT NỘI BỘ
 
+_Last reviewed: 2026-05-18_
+
 Tài liệu này thiết lập các quy chuẩn về giao tiếp, biên soạn tài liệu và quy trình Git dành cho AI Assistant trong môi trường phát triển chuyên nghiệp.
 
 ---
