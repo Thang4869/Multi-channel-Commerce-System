@@ -3,6 +3,7 @@ import { InventoryController } from './interfaces/http/controllers/inventory.con
 import { InventoryRepository } from './infrastructure/repositories/inventory.repository';
 import { PrismaClient } from '@prisma/client';
 import { InventoryService } from './application/inventory.service';
+import { RedisEventBusService } from './infrastructure/events/redis-event-bus.service';
 
 const prismaClient = new PrismaClient();
 
@@ -17,6 +18,11 @@ const prismaClient = new PrismaClient();
       provide: InventoryService,
       useFactory: (repo: InventoryRepository) => new InventoryService(repo),
       inject: ['IInventoryRepository'],
+    },
+    {
+      provide: RedisEventBusService,
+      useFactory: (svc: InventoryService) => new RedisEventBusService(svc),
+      inject: [InventoryService],
     },
   ],
   controllers: [InventoryController],

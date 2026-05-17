@@ -1,0 +1,50 @@
+name: Inventory integration tests
+
+on:
+  push:
+    branches: [ main, 'feat/*', 'fix/*', 'chore/*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  inventory-integration:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          cd services/inventory-service
+          npm ci
+
+      - name: Wait for Redis
+        run: |
+          for i in {1..30}; do
+            if nc -z localhost 6379; then echo "redis up" && break; fi
+            echo "waiting for redis..."; sleep 1;
+          done
+
+      - name: Run inventory tests
+        env:
+          REDIS_URL: redis://localhost:6379
+          NODE_ENV: ci
+        run: |
+          cd services/inventory-service
+          npm run test -- --runInBand
