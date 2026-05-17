@@ -30,6 +30,7 @@ model Delivery {
   @@index([shipperId])
   @@index([status])
   @@map("deliveries")
+  @@schema("delivery_schema")
 }
 
 model DeliveryTracking {
@@ -46,4 +47,5 @@ model DeliveryTracking {
 
   @@index([deliveryId])
   @@map("delivery_tracking")
+  @@schema("delivery_schema")
 }
