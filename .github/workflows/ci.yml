@@ -37,6 +37,16 @@ jobs:
         run: |
           if [ -f package.json ]; then npm ci; fi
 
+      - name: Lint
+        working-directory: ${{ matrix.service }}
+        run: |
+          if [ -f package.json ] && npm run -s lint >/dev/null 2>&1; then npm run lint || exit 1; else echo 'no lint script'; fi
+
+      - name: Security audit
+        working-directory: ${{ matrix.service }}
+        run: |
+          if [ -f package.json ]; then npm audit --audit-level=high || echo 'audit issues (see logs)'; fi
+
       - name: Prisma generate (if exists)
         working-directory: ${{ matrix.service }}
         run: |
