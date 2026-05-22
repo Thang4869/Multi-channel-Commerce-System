@@ -21,4 +21,9 @@ export class NotificationController {
   async update(@Param('id') id: string, @Body() dto: UpdateNotificationDto) {
     return this.service.update(id, dto);
   }
+
+  @Get('health')
+  health() {
+    return { status: 'ok' };
+  }
 }
