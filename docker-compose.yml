@@ -242,6 +242,12 @@ services:
       - warehouse-service
       - notification-service
 
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    ports:
+      - "9100:9100"
+
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -249,6 +255,11 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
     ports:
       - "80:80"
       - "443:443"

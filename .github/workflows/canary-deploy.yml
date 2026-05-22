@@ -45,5 +45,23 @@ jobs:
              docker rm notification_service_canary || true && \
              docker run -d --name notification_service_canary -p 3009:3008 --env-file /home/deploy/envs/notification.env ghcr.io/${{ github.repository_owner }}/notification-service:canary-${{ github.sha }}"
 
-      - name: Canary verification (placeholder)
-        run: echo "Canary deployed. Verification steps should be implemented."
+      - name: Verify canary on remote and rollback on failure
+        run: |
+          set -e
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} bash -s << 'EOF'
+          set -e
+          echo "Waiting for canary to become healthy..."
+          for i in 1 2 3 4 5; do
+            if curl -sSf http://localhost:3009/api/notifications/health -m 5 >/dev/null; then
+              echo "Canary healthy"
+              exit 0
+            else
+              echo "Attempt $i: canary not ready, retrying..."
+              sleep 5
+            fi
+          done
+          echo "Canary verification failed, rolling back"
+          docker stop notification_service_canary || true
+          docker rm notification_service_canary || true
+          exit 1
+EOF
