@@ -8,7 +8,7 @@ dotenv.config();
 async function bootstrap() {
   const app = await NestFactory.create(NotificationModule);
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  const port = process.env.PORT || 3011;
+  const port = process.env.PORT || 3008;
   await app.listen(port);
   console.log(`Notification service listening on ${port}`);
 }

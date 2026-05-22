@@ -2,16 +2,16 @@ import { IsString, IsOptional, IsObject } from 'class-validator';
 
 export class CreateNotificationDto {
   @IsString()
-  userId: string;
+  userId!: string;
 
   @IsString()
-  type: string;
+  type!: string;
 
   @IsString()
-  title: string;
+  title!: string;
 
   @IsString()
-  message: string;
+  message!: string;
 
   @IsOptional()
   @IsObject()
