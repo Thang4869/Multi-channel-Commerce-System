@@ -11,7 +11,7 @@ export class NotificationRepository {
       type: dto.type,
       title: dto.title,
       message: dto.message,
-      data: dto.data ?? null,
+      data: (dto.data as any) ?? null,
     }});
   }
 
