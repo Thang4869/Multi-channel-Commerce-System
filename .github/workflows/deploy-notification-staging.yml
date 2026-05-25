@@ -2,6 +2,19 @@ name: Deploy Notification Service to Staging
 
 on:
   workflow_dispatch:
+    inputs:
+      deploy_host:
+        description: Staging host for notification service deployment
+        required: true
+        type: string
+      deploy_user:
+        description: SSH user for the staging host
+        required: true
+        type: string
+      deploy_ssh_key:
+        description: SSH private key for the staging host
+        required: true
+        type: string
   push:
     branches:
       - feat/notification-service
@@ -42,19 +55,36 @@ jobs:
   deploy-via-ssh:
     needs: build-and-push
     runs-on: ubuntu-latest
-    if: ${{ secrets.DEPLOY_HOST && secrets.DEPLOY_USER && secrets.DEPLOY_SSH_KEY }}
+    if: github.event_name == 'workflow_dispatch'
     steps:
       - name: Install SSH client
         run: sudo apt-get update && sudo apt-get install -y openssh-client
 
-      - name: Add SSH key
-        uses: webfactory/ssh-agent@v0.8.1
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+      - name: Validate deployment secrets
+        env:
+          DEPLOY_HOST: ${{ inputs.deploy_host }}
+          DEPLOY_USER: ${{ inputs.deploy_user }}
+          DEPLOY_SSH_KEY: ${{ inputs.deploy_ssh_key }}
+        run: |
+          if [ -z "$DEPLOY_HOST" ] || [ -z "$DEPLOY_USER" ] || [ -z "$DEPLOY_SSH_KEY" ]; then
+            echo "Missing one or more deployment secrets: DEPLOY_HOST, DEPLOY_USER, DEPLOY_SSH_KEY"
+            exit 1
+          fi
+
+      - name: Prepare SSH key
+        env:
+          DEPLOY_SSH_KEY: ${{ inputs.deploy_ssh_key }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
 
       - name: Pull image and restart container on staging host
+        env:
+          DEPLOY_HOST: ${{ inputs.deploy_host }}
+          DEPLOY_USER: ${{ inputs.deploy_user }}
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_HOST" \
             "docker pull ghcr.io/${{ github.repository_owner }}/notification-service:${{ github.sha }} && \
              docker stop notification_service || true && \
              docker rm notification_service || true && \
