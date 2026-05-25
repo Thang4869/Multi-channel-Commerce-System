@@ -30,17 +30,18 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
+          cache: yarn
 
       - name: Install dependencies
         working-directory: ${{ matrix.service }}
         run: |
-          if [ -f package.json ]; then npm ci; fi
+          if [ -f package.json ]; then yarn install --non-interactive; fi
 
       - name: Lint
         working-directory: ${{ matrix.service }}
         run: |
-          if [ -f package.json ] && npm run -s lint >/dev/null 2>&1; then npm run lint || exit 1; else echo 'no lint script'; fi
+          if [ -f package.json ] && yarn -s lint >/dev/null 2>&1; then yarn lint || exit 1; else echo 'no lint script'; fi
 
       - name: Security audit
         working-directory: ${{ matrix.service }}
@@ -50,19 +51,19 @@ jobs:
       - name: Prisma generate (if exists)
         working-directory: ${{ matrix.service }}
         run: |
-          if [ -f prisma/schema.prisma ]; then npx prisma generate || true; fi
+          if [ -f prisma/schema.prisma ]; then yarn prisma:generate || true; fi
 
       - name: Run tests
         working-directory: ${{ matrix.service }}
         env:
           CI: true
         run: |
-          if [ -f package.json ]; then if npm run -s test --silent; then echo 'tests OK'; else exit 1; fi; fi
+          if [ -f package.json ]; then if yarn test --silent; then echo 'tests OK'; else exit 1; fi; fi
 
       - name: Build (if script exists)
         working-directory: ${{ matrix.service }}
         run: |
-          if [ -f package.json ]; then npm run -s build || echo 'no build'; fi
+          if [ -f package.json ]; then yarn build || echo 'no build'; fi
 
   build-images:
     name: Build & Push Docker images (main only)
