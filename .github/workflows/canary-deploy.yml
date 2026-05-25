@@ -1,6 +1,20 @@
 name: Canary Deploy to Staging
 
 on:
+  workflow_dispatch:
+    inputs:
+      deploy_host:
+        description: Staging host for canary deployment
+        required: true
+        type: string
+      deploy_user:
+        description: SSH user for the staging host
+        required: true
+        type: string
+      deploy_ssh_key:
+        description: SSH private key for the staging host
+        required: true
+        type: string
   push:
     branches:
       - main
@@ -9,7 +23,7 @@ jobs:
   canary:
     name: Canary deploy
     runs-on: ubuntu-latest
-    if: ${{ secrets.DEPLOY_HOST && secrets.DEPLOY_USER && secrets.DEPLOY_SSH_KEY }}
+    if: github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,35 +47,28 @@ jobs:
           tags: ghcr.io/${{ github.repository_owner }}/notification-service:canary-${{ github.sha }}
 
       - name: Deploy canary on staging host
-        uses: webfactory/ssh-agent@v0.8.1
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+        env:
+          DEPLOY_SSH_KEY: ${{ inputs.deploy_ssh_key }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
 
       - name: Pull & run canary container
+        env:
+          DEPLOY_HOST: ${{ inputs.deploy_host }}
+          DEPLOY_USER: ${{ inputs.deploy_user }}
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_HOST" \
             "docker pull ghcr.io/${{ github.repository_owner }}/notification-service:canary-${{ github.sha }} && \
              docker stop notification_service_canary || true && \
              docker rm notification_service_canary || true && \
              docker run -d --name notification_service_canary -p 3009:3008 --env-file /home/deploy/envs/notification.env ghcr.io/${{ github.repository_owner }}/notification-service:canary-${{ github.sha }}"
 
       - name: Verify canary on remote and rollback on failure
+        env:
+          DEPLOY_HOST: ${{ inputs.deploy_host }}
+          DEPLOY_USER: ${{ inputs.deploy_user }}
         run: |
           set -e
-          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} bash -s << 'EOF'
-          set -e
-          echo "Waiting for canary to become healthy..."
-          for i in 1 2 3 4 5; do
-            if curl -sSf http://localhost:3009/api/notifications/health -m 5 >/dev/null; then
-              echo "Canary healthy"
-              exit 0
-            else
-              echo "Attempt $i: canary not ready, retrying..."
-              sleep 5
-            fi
-          done
-          echo "Canary verification failed, rolling back"
-          docker stop notification_service_canary || true
-          docker rm notification_service_canary || true
-          exit 1
-EOF
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_HOST" "set -e; echo 'Waiting for canary to become healthy...'; for i in 1 2 3 4 5; do if curl -sSf http://localhost:3009/api/notifications/health -m 5 >/dev/null; then echo 'Canary healthy'; exit 0; else echo \"Attempt $i: canary not ready, retrying...\"; sleep 5; fi; done; echo 'Canary verification failed, rolling back'; docker stop notification_service_canary || true; docker rm notification_service_canary || true; exit 1"
