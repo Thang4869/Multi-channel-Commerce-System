@@ -69,8 +69,12 @@ export class InventoryService {
     if (!url) return;
     try {
       await axios.post(`${url}/internal/orders/${orderId}/inventory-callback`, { lockId, status });
-    } catch (err) {
-      this.logger.warn(`Failed to notify: ${err.message}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        this.logger.warn(`Failed to notify: ${err.message}`);
+      } else {
+        this.logger.warn(`Failed to notify: ${String(err)}`);
+      }
     }
   }
 }
