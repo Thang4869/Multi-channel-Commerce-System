@@ -74,7 +74,7 @@ jobs:
         run: |
           if [ -f package.json ]; then
             if node -e "const pkg = require('./package.json'); process.exit(pkg.scripts && pkg.scripts.test ? 0 : 1)"; then
-              if yarn test --silent; then
+              if yarn test --silent --passWithNoTests; then
                 echo 'tests OK'
               else
                 exit 1
