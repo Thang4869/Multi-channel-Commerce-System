@@ -66,5 +66,6 @@ jobs:
         env:
           REDIS_URL: redis://localhost:6379
           NODE_ENV: ci
+          RUN_REAL_REDIS_INTEGRATION: true
         run: |
           yarn test --runInBand
