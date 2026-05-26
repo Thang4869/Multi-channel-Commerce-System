@@ -3,20 +3,20 @@ import { IsString, IsNotEmpty, IsDecimal, IsOptional, IsDateString } from 'class
 export class CreateDeliveryDto {
   @IsString()
   @IsNotEmpty()
-  orderId: string;
+  orderId!: string;
 
   @IsString()
   @IsNotEmpty()
-  destLocationAddress: string;
+  destLocationAddress!: string;
 
   @IsDecimal()
-  destLocationLat: number;
+  destLocationLat!: number;
 
   @IsDecimal()
-  destLocationLng: number;
+  destLocationLng!: number;
 
   @IsDateString()
-  estimatedDeliveryTime: string;
+  estimatedDeliveryTime!: string;
 
   @IsString()
   @IsOptional()

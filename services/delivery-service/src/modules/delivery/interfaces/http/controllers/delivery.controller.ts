@@ -1,7 +1,7 @@
 import { Controller, Post, Get, Put, Body, Param, Query } from '@nestjs/common';
-import { DeliveryService } from '../../application/delivery.service';
-import { CreateDeliveryDto } from '../../dtos/create-delivery.dto';
-import { UpdateDeliveryStatusDto } from '../../dtos/update-delivery-status.dto';
+import { DeliveryService } from '../../../application/delivery.service';
+import { CreateDeliveryDto } from '../../../dtos/create-delivery.dto';
+import { UpdateDeliveryStatusDto } from '../../../dtos/update-delivery-status.dto';
 
 @Controller('delivery')
 export class DeliveryController {
