@@ -8,7 +8,7 @@ WORKDIR /app
 
 
 # Copy workspace manifests and shared types so Yarn resolves the local package.
-COPY package.json yarn.lock ./
+COPY package.json ./
 COPY packages/types ./packages/types
 COPY services/product-service/package.json ./services/product-service/package.json
 COPY services/product-service/tsconfig.json ./services/product-service/tsconfig.json
@@ -30,7 +30,7 @@ RUN apk add --no-cache dumb-init
 
 
 # Copy workspace manifests and shared types so runtime resolution matches build.
-COPY package.json yarn.lock ./
+COPY package.json ./
 COPY packages/types ./packages/types
 COPY services/product-service/package.json ./services/product-service/package.json
 COPY services/product-service/prisma ./services/product-service/prisma
