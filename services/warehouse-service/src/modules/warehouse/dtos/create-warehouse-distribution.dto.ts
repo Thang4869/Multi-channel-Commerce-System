@@ -3,19 +3,19 @@ import { IsString, IsNotEmpty, IsInt, Min, IsOptional, IsDateString } from 'clas
 export class CreateWarehouseDistributionDto {
   @IsString()
   @IsNotEmpty()
-  warehouseId: string;
+  warehouseId!: string;
 
   @IsString()
   @IsNotEmpty()
-  storeId: string;
+  storeId!: string;
 
   @IsString()
   @IsNotEmpty()
-  productId: string;
+  productId!: string;
 
   @IsInt()
   @Min(1)
-  quantity: number;
+  quantity!: number;
 
   @IsDateString()
   @IsOptional()
