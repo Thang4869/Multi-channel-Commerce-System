@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-
 export class InventoryRepository {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: any) {}
 
   async findStoreWithAvailable(productId: string, quantity: number) {
     return this.prisma.storeStock.findFirst({ where: { productId, available: { gte: quantity } } });

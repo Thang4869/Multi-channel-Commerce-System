@@ -2,6 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InventoryRepository } from '../infrastructure/repositories/inventory.repository';
 import axios from 'axios';
 
+type WarehouseCandidate = {
+  id: string;
+  warehouseId: string;
+  available: number;
+};
+
 @Injectable()
 export class InventoryService {
   private readonly logger = new Logger(InventoryService.name);
@@ -21,7 +27,7 @@ export class InventoryService {
     }
 
     // Warehouse: pick candidate with max available
-    const candidates = await this.repo.findWarehouseCandidates(productId, quantity);
+    const candidates = (await this.repo.findWarehouseCandidates(productId, quantity)) as WarehouseCandidate[];
     if (!candidates || candidates.length === 0) {
       await this.repo.updateInventoryLock(lock.id, { status: 'FAILED' });
       await this.notifyOrder(orderId, lock.id, 'FAILED');
