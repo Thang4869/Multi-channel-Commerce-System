@@ -11,7 +11,7 @@ import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class OrderRepository implements IOrderRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: any) {}
 
   async create(order: Order): Promise<Order> {
     const created = await this.prisma.order.create({
