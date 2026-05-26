@@ -5,7 +5,7 @@ import { IBrandRepository } from '../../application/interfaces';
 
 @Injectable()
 export class BrandRepository implements IBrandRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: any) {}
 
   async create(brand: Brand): Promise<Brand> {
     const created = await this.prisma.brand.create({
@@ -32,7 +32,7 @@ export class BrandRepository implements IBrandRepository {
       orderBy: { createdAt: 'asc' },
     });
 
-    return brands.map(brand => this.mapToEntity(brand));
+    return brands.map((brand: any) => this.mapToEntity(brand));
   }
 
   async update(brandId: string, data: Partial<Brand>): Promise<Brand> {

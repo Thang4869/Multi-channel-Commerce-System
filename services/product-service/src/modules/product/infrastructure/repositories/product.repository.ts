@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { Product } from '../../domain/entities/product.entity';
 import { IProductRepository, ProductQuery } from '../../application/interfaces';
 
 @Injectable()
 export class ProductRepository implements IProductRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: any) {}
 
   async create(product: Product): Promise<Product> {
     const created = await this.prisma.product.create({
@@ -42,7 +42,7 @@ export class ProductRepository implements IProductRepository {
   }
 
   async findAll(query: ProductQuery): Promise<{ items: Product[]; total: number }> {
-    const where: Prisma.ProductWhereInput = {};
+    const where: any = {};
 
     if (query.search) {
       where.OR = [
@@ -81,7 +81,7 @@ export class ProductRepository implements IProductRepository {
     ]);
 
     return {
-      items: items.map(item => this.mapToEntity(item)),
+      items: items.map((item: any) => this.mapToEntity(item)),
       total,
     };
   }

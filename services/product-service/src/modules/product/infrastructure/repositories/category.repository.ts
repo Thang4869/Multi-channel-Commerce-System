@@ -5,7 +5,7 @@ import { ICategoryRepository } from '../../application/interfaces';
 
 @Injectable()
 export class CategoryRepository implements ICategoryRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: any) {}
 
   async create(category: Category): Promise<Category> {
     const created = await this.prisma.category.create({
@@ -40,7 +40,7 @@ export class CategoryRepository implements ICategoryRepository {
       orderBy: { createdAt: 'asc' },
     });
 
-    return categories.map(category => this.mapToEntity(category));
+    return categories.map((category: any) => this.mapToEntity(category));
   }
 
   async update(categoryId: string, data: Partial<Category>): Promise<Category> {
