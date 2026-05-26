@@ -127,13 +127,13 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@v4
 
     - name: Build Auth Service Image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v7
       with:
         context: .
         file: services/auth-service/Dockerfile
@@ -141,7 +141,7 @@ jobs:
         tags: commerce/auth-service:latest
 
     - name: Build Order Service Image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v7
       with:
         context: .
         file: services/order-service/Dockerfile
@@ -149,7 +149,7 @@ jobs:
         tags: commerce/order-service:latest
 
     - name: Build Product Service Image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v7
       with:
         context: .
         file: services/product-service/Dockerfile
@@ -157,7 +157,7 @@ jobs:
         tags: commerce/product-service:latest
 
     - name: Build Inventory Service Image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v7
       with:
         context: .
         file: services/inventory-service/Dockerfile
@@ -165,7 +165,7 @@ jobs:
         tags: commerce/inventory-service:latest
 
     - name: Build Delivery Service Image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v7
       with:
         context: .
         file: services/delivery-service/Dockerfile
@@ -173,7 +173,7 @@ jobs:
         tags: commerce/delivery-service:latest
 
     - name: Build Warehouse Service Image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v7
       with:
         context: .
         file: services/warehouse-service/Dockerfile
@@ -181,7 +181,7 @@ jobs:
         tags: commerce/warehouse-service:latest
 
     - name: Build Notification Service Image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v7
       with:
         context: .
         file: services/notification-service/Dockerfile
@@ -189,7 +189,7 @@ jobs:
         tags: commerce/notification-service:latest
 
     - name: Build Warehouse Dashboard Image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v7
       with:
         context: .
         file: apps/web/warehouse-dashboard/Dockerfile
