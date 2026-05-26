@@ -6,10 +6,16 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-COPY services/product-service/package.json .
-COPY services/product-service/tsconfig.json .
-COPY services/product-service/prisma ./prisma
-RUN yarn install
+
+# Copy workspace manifests and shared types so Yarn resolves the local package.
+COPY package.json yarn.lock ./
+COPY packages/types ./packages/types
+COPY services/product-service/package.json ./services/product-service/package.json
+COPY services/product-service/tsconfig.json ./services/product-service/tsconfig.json
+COPY services/product-service/prisma ./services/product-service/prisma
+RUN yarn install --frozen-lockfile --non-interactive
+
+WORKDIR /app/services/product-service
 RUN npx prisma generate
 
 COPY services/product-service/src ./src
@@ -22,13 +28,18 @@ WORKDIR /app
 
 RUN apk add --no-cache dumb-init
 
-COPY services/product-service/package.json .
-COPY services/product-service/prisma ./prisma
-RUN yarn install --production
+
+# Copy workspace manifests and shared types so runtime resolution matches build.
+COPY package.json yarn.lock ./
+COPY packages/types ./packages/types
+COPY services/product-service/package.json ./services/product-service/package.json
+COPY services/product-service/prisma ./services/product-service/prisma
+RUN yarn install --frozen-lockfile --non-interactive --production
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
-COPY --from=builder /app/dist ./dist
+WORKDIR /app/services/product-service
+COPY --from=builder /app/services/product-service/dist ./dist
 
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
