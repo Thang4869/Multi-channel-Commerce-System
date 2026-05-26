@@ -6,7 +6,7 @@ import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class TokenRepository implements ITokenRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: any) {}
 
   async saveRefreshToken(userId: string, token: string, expiresAt: Date): Promise<void> {
     await this.prisma.refreshToken.create({
