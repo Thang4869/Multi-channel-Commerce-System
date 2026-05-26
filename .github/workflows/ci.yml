@@ -6,6 +6,9 @@ on:
   push:
     branches: [ main ]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   service-tests:
     name: Run tests per service
@@ -67,11 +70,14 @@ jobs:
           CI: true
         run: |
           if [ -f package.json ]; then
-            # allow services with no tests to succeed, but still fail on real test failures
-            if yarn test --silent -- --passWithNoTests; then
-              echo 'tests OK'
+            if node -e "const pkg = require('./package.json'); process.exit(pkg.scripts && pkg.scripts.test ? 0 : 1)"; then
+              if yarn test --silent; then
+                echo 'tests OK'
+              else
+                exit 1
+              fi
             else
-              exit 1
+              echo 'no test script'
             fi
           fi
 
