@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { CreateNotificationDto } from '../dtos/create-notification.dto';
 import { UpdateNotificationDto } from '../dtos/update-notification.dto';
 
-const prisma = new PrismaClient();
+const prisma: any = new PrismaClient();
 
 export class NotificationRepository {
   async create(dto: CreateNotificationDto) {
