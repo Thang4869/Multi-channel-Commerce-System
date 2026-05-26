@@ -44,10 +44,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - name: Set Yarn registry
+        run: yarn config set registry https://registry.npmjs.org
+
       - name: Install dependencies
         working-directory: ${{ matrix.service }}
         run: |
-          if [ -f package.json ]; then yarn install --non-interactive; fi
+          if [ -f package.json ]; then yarn install --non-interactive --network-timeout 600000; fi
 
       - name: Lint
         working-directory: ${{ matrix.service }}

@@ -37,10 +37,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - name: Set Yarn registry
+        run: yarn config set registry https://registry.npmjs.org
+
       - name: Install dependencies
         working-directory: services/notification-service
         run: |
-          yarn install --frozen-lockfile --non-interactive
+          yarn install --frozen-lockfile --non-interactive --network-timeout 600000
 
       - name: Generate Prisma client
         working-directory: services/notification-service

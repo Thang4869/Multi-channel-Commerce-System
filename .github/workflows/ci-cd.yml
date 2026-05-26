@@ -54,8 +54,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-yarn-
 
+    - name: Set Yarn registry
+      run: yarn config set registry https://registry.npmjs.org
+
     - name: Install dependencies
-      run: yarn install
+      run: yarn install --network-timeout 600000
       env:
         DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=public
 
