@@ -3,11 +3,11 @@ import { IsString, IsNotEmpty, IsDecimal, IsOptional } from 'class-validator';
 export class UpdateDeliveryStatusDto {
   @IsString()
   @IsNotEmpty()
-  deliveryId: string;
+  deliveryId!: string;
 
   @IsString()
   @IsNotEmpty()
-  status: string;
+  status!: string;
 
   @IsDecimal()
   @IsOptional()
