@@ -1,12 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { User } from '../../domain/entities/user.entity';
+import { UserRole } from '@commerce/types';
 import { IUserRepository, ITokenRepository } from '../../application/interfaces';
 import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: any) {}
+
+  private mapUserRoles(roles: string[] | UserRole[]): UserRole[] {
+    return roles as UserRole[];
+  }
+
+  private toDomainUser(user: any): User {
+    return new User({
+      ...user,
+      roles: this.mapUserRoles(user.roles),
+    });
+  }
 
   async create(user: User): Promise<User> {
     const created = await this.prisma.user.create({
@@ -21,7 +33,7 @@ export class UserRepository implements IUserRepository {
       },
     });
 
-    return new User(created);
+    return this.toDomainUser(created);
   }
 
   async findById(userId: string): Promise<User | null> {
@@ -29,7 +41,7 @@ export class UserRepository implements IUserRepository {
       where: { id: userId },
     });
 
-    return user ? new User(user) : null;
+    return user ? this.toDomainUser(user) : null;
   }
 
   async findByEmail(email: string): Promise<User | null> {
@@ -37,7 +49,7 @@ export class UserRepository implements IUserRepository {
       where: { email },
     });
 
-    return user ? new User(user) : null;
+    return user ? this.toDomainUser(user) : null;
   }
 
   async update(userId: string, data: Partial<User>): Promise<User> {
@@ -46,7 +58,7 @@ export class UserRepository implements IUserRepository {
       data,
     });
 
-    return new User(updated);
+    return this.toDomainUser(updated);
   }
 
   async delete(userId: string): Promise<void> {
@@ -65,7 +77,7 @@ export class UserRepository implements IUserRepository {
     ]);
 
     return {
-      items: users.map((u: any) => new User(u)),
+      items: users.map((u: any) => this.toDomainUser(u)),
       total,
     };
   }
@@ -84,7 +96,7 @@ export class UserRepository implements IUserRepository {
         data: { roles: user.roles },
       });
 
-      return new User(updated);
+      return this.toDomainUser(updated);
     }
 
     return user;
@@ -103,6 +115,6 @@ export class UserRepository implements IUserRepository {
       data: { roles: user.roles },
     });
 
-    return new User(updated);
+    return this.toDomainUser(updated);
   }
 }
