@@ -28,18 +28,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: services/inventory-service/package-lock.json
+
+      - name: Cache Yarn
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies
         working-directory: services/inventory-service
         run: |
-          npm ci
+          yarn install --frozen-lockfile --non-interactive
 
       - name: Generate Prisma client
         working-directory: services/inventory-service
         run: |
-          npm run prisma:generate
+          yarn prisma:generate
 
       - name: Wait for Redis
         run: |
@@ -54,4 +61,4 @@ jobs:
           REDIS_URL: redis://localhost:6379
           NODE_ENV: ci
         run: |
-          npm run test -- --runInBand
+          yarn test --runInBand

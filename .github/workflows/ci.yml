@@ -31,7 +31,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: yarn
+
+      - name: Cache Yarn
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies
         working-directory: ${{ matrix.service }}
@@ -58,7 +66,14 @@ jobs:
         env:
           CI: true
         run: |
-          if [ -f package.json ]; then if yarn test --silent; then echo 'tests OK'; else exit 1; fi; fi
+          if [ -f package.json ]; then
+            # allow services with no tests to succeed, but still fail on real test failures
+            if yarn test --silent -- --passWithNoTests; then
+              echo 'tests OK'
+            else
+              exit 1
+            fi
+          fi
 
       - name: Build (if script exists)
         working-directory: ${{ matrix.service }}

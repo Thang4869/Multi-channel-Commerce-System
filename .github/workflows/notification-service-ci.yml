@@ -24,26 +24,35 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: npm
+          
+
+      - name: Cache Yarn
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies
         working-directory: services/notification-service
         run: |
-          npm ci
+          yarn install --frozen-lockfile --non-interactive
 
       - name: Generate Prisma client
         working-directory: services/notification-service
         run: |
-          npm run prisma:generate
+          yarn prisma:generate
 
       - name: Run tests
         working-directory: services/notification-service
         env:
           CI: true
         run: |
-          npm test -- --runInBand
+          yarn test --runInBand
 
       - name: Build
         working-directory: services/notification-service
         run: |
-          npm run build
+          yarn build
