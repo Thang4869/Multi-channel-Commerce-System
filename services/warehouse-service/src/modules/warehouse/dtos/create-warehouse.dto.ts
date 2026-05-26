@@ -3,15 +3,15 @@ import { IsString, IsNotEmpty, IsInt, Min, IsOptional } from 'class-validator';
 export class CreateWarehouseDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsString()
   @IsNotEmpty()
-  location: string;
+  location!: string;
 
   @IsInt()
   @Min(1)
-  capacity: number;
+  capacity!: number;
 
   @IsString()
   @IsOptional()
