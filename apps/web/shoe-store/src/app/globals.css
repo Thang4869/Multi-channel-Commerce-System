@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand: #e94f37;
+  --accent: #f6c445;
+  --surface: #fff6ed;
+  --surface-2: #ffe7d6;
+  --ink: #1f1a15;
+  --muted: #6f5e53;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  @apply font-body text-ink;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(246, 196, 69, 0.35), transparent 60%),
+    radial-gradient(900px 500px at 90% 10%, rgba(233, 79, 55, 0.25), transparent 55%),
+    linear-gradient(180deg, var(--surface), #fff9f2 65%, var(--surface-2));
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+}
+
+.card {
+  @apply rounded-2xl bg-white/80 backdrop-blur border border-white/60 shadow-glow;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold text-white;
+  background: linear-gradient(135deg, var(--brand), #ff7a59);
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold;
+  background: white;
+  border: 1px solid rgba(31, 26, 21, 0.12);
+}
+
+.brand-chip {
+  @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs uppercase tracking-[0.2em];
+  background: rgba(233, 79, 55, 0.12);
+  color: var(--brand);
+}
+
+.section-title {
+  @apply text-3xl md:text-4xl font-heading tracking-wide;
+}
+
+.animate-rise {
+  animation: rise 0.6s ease-out both;
+}
+
+.animate-rise-delayed {
+  animation: rise 0.8s ease-out both;
+  animation-delay: 0.1s;
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
