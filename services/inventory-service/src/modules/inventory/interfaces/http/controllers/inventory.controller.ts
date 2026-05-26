@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { InventoryService } from '../../application/inventory.service';
+import { InventoryService } from '../../../application/inventory.service';
 import { LockStockDto } from '../../../dtos/lock-stock.dto';
 
 @Controller('inventory')

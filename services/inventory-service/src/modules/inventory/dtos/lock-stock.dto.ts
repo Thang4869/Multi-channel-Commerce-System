@@ -3,13 +3,13 @@ import { IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
 export class LockStockDto {
   @IsString()
   @IsNotEmpty()
-  orderId: string;
+  orderId!: string;
 
   @IsString()
   @IsNotEmpty()
-  productId: string;
+  productId!: string;
 
   @IsInt()
   @Min(1)
-  quantity: number;
+  quantity!: number;
 }
