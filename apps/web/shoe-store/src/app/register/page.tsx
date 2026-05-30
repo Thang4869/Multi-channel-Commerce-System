@@ -4,21 +4,22 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AppShell from '@/components/AppShell';
 import { authApi } from '@/lib/api';
+import { RegisterRequest, UserRole } from '@commerce/types';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<RegisterRequest & { password: string }>({
     fullName: '',
     email: '',
     password: '',
     phone: '',
-    role: 'CUSTOMER',
+    role: UserRole.CUSTOMER,
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const handleChange = (key: string, value: string) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
+  const handleChange = (key: keyof (RegisterRequest & { password: string }), value: string) => {
+    setForm((prev) => ({ ...prev, [key]: key === 'role' ? (value as UserRole) : value }));
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -27,11 +28,17 @@ export default function RegisterPage() {
     setSuccess('');
 
     try {
-      await authApi.register(form);
+      await authApi.register({
+        email: form.email,
+        password: form.password,
+        fullName: form.fullName,
+        phone: form.phone,
+        role: form.role,
+      });
       setSuccess('Account created. You can sign in now.');
       setTimeout(() => router.push('/login'), 800);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setError('Registration failed');
     }
   };
 
@@ -81,7 +88,10 @@ export default function RegisterPage() {
               onChange={(event) => handleChange('phone', event.target.value)}
               className="w-full rounded-full border border-white/70 bg-white/80 px-4 py-2 text-sm"
             />
+            <label htmlFor="role" className="sr-only">Role</label>
             <select
+              id="role"
+              aria-label="Role"
               value={form.role}
               onChange={(event) => handleChange('role', event.target.value)}
               className="w-full rounded-full border border-white/70 bg-white/80 px-4 py-2 text-sm"

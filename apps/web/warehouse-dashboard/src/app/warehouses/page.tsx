@@ -27,7 +27,7 @@ export default function WarehousesPage() {
       return;
     }
 
-    fetchWarehouses();
+    void fetchWarehouses();
   }, [token, router]);
 
   const fetchWarehouses = async () => {

@@ -113,8 +113,10 @@ export default function DistributionsPage() {
 
         {/* Filter */}
         <div className="bg-white rounded-lg shadow p-4">
-          <label className="text-sm font-medium text-gray-700">Filter by Status</label>
+          <label htmlFor="status-filter" className="text-sm font-medium text-gray-700">Filter by Status</label>
           <select
+            id="status-filter"
+            aria-label="Filter by status"
             value={filter.status}
             onChange={(e) => setFilter({ ...filter, status: e.target.value })}
             className="mt-2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"

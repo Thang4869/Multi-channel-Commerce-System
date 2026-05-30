@@ -23,13 +23,18 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await authApi.login(email, password);
-      const { accessToken, user } = response.data;
+      const result = await authApi.login(email, password);
+      const accessToken = result?.data?.accessToken;
+      const user = result?.data?.user;
 
-      setAuth(accessToken, user);
-      router.push('/dashboard');
+      if (accessToken && user) {
+        setAuth(accessToken, user);
+        router.push('/dashboard');
+      } else {
+        setError('Invalid login response');
+      }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed');
+      setError('Login failed');
     } finally {
       setIsLoading(false);
     }

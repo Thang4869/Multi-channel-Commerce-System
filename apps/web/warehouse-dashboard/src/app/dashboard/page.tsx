@@ -18,7 +18,9 @@ export default function DashboardPage() {
     const fetchOrders = async () => {
       try {
         const response = await orderApi.getAll();
-        setOrders(response.data.items || response.data);
+        const payload = response?.data;
+        const items = (payload && 'items' in payload && Array.isArray((payload as any).items)) ? (payload as any).items : (Array.isArray(payload) ? payload : []);
+        setOrders(items);
       } catch (error) {
         console.error('Failed to fetch orders:', error);
       } finally {
@@ -26,7 +28,7 @@ export default function DashboardPage() {
       }
     };
 
-    fetchOrders();
+    void fetchOrders();
   }, [setOrders]);
 
   if (isLoading) {
@@ -131,7 +133,7 @@ export default function DashboardPage() {
               </thead>
 
               <tbody className="bg-white divide-y divide-gray-200">
-                {orders?.map((order: { id: string; orderNumber?: string; customerId?: string; totalPrice?: number; status?: string; createdAt?: string }) => (
+                {orders?.map((order: any) => (
                   <tr key={order.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
                       {order.orderNumber}
@@ -160,7 +162,7 @@ export default function DashboardPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(order.createdAt).toLocaleDateString()}
+                      {order?.createdAt ? new Date(String(order.createdAt)).toLocaleDateString() : ''}
                     </td>
                   </tr>
                 ))}

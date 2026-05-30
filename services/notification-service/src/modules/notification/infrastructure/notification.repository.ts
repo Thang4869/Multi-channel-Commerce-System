@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { CreateNotificationDto } from '../dtos/create-notification.dto';
 import { UpdateNotificationDto } from '../dtos/update-notification.dto';
 
@@ -11,7 +11,7 @@ export class NotificationRepository {
       type: dto.type,
       title: dto.title,
       message: dto.message,
-      data: (dto.data as any) ?? null,
+      data: (dto.data as Prisma.InputJsonValue) ?? undefined,
     }});
   }
 

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ApiResponse, RegisterRequest, UserDto } from '@commerce/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -29,11 +30,11 @@ apiClient.interceptors.response.use(
 );
 
 export const authApi = {
-  login: (email: string, password: string) =>
-    apiClient.post('/auth/login', { email, password }),
-  register: (data: Record<string, any>) =>
-    apiClient.post('/auth/register', data),
-  getCurrentUser: () => apiClient.get('/auth/me'),
+  login: (email: string, password: string): Promise<ApiResponse<{ accessToken: string; refreshToken: string; user?: UserDto }>> =>
+    apiClient.post<ApiResponse<{ accessToken: string; refreshToken: string; user?: UserDto }>>('/auth/login', { email, password }).then((r) => r.data),
+  register: (data: RegisterRequest): Promise<ApiResponse<UserDto>> =>
+    apiClient.post<ApiResponse<UserDto>>('/auth/register', data).then((r) => r.data),
+  getCurrentUser: (): Promise<ApiResponse<UserDto>> => apiClient.get<ApiResponse<UserDto>>('/auth/me').then((r) => r.data),
 };
 
 export default apiClient;
