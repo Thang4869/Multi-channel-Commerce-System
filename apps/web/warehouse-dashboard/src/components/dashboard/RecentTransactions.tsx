@@ -17,10 +17,10 @@ export default function RecentTransactions() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchTransactions();
+    void fetchTransactions();
   }, [token]);
 
-  const fetchTransactions = async () => {
+  const fetchTransactions = () => {
     try {
       // Mock data
       setTransactions([

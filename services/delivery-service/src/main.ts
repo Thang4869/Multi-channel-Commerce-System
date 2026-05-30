@@ -13,4 +13,4 @@ async function bootstrap() {
   console.log(`Delivery service listening on ${port}`);
 }
 
-bootstrap();
+void bootstrap();

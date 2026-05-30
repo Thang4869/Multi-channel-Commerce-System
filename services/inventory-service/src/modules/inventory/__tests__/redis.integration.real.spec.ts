@@ -19,7 +19,7 @@ describe('RedisEventBusService integration (real redis)', () => {
     pub = createClient({ url: process.env.REDIS_URL });
     await pub.connect();
 
-    bus = new RedisEventBusService(mockInventoryService as any);
+    bus = new RedisEventBusService(mockInventoryService);
     await bus.onModuleInit();
   }, 20000);
 

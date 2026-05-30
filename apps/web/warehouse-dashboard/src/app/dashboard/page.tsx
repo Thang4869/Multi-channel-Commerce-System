@@ -72,7 +72,7 @@ export default function DashboardPage() {
                 Pending Orders
               </div>
               <div className="mt-1 text-3xl font-semibold text-yellow-600">
-                {orders?.filter((o: any) => o.status === 'PENDING').length || 0}
+                {orders?.filter((o: { status?: string }) => o.status === 'PENDING').length || 0}
               </div>
             </div>
           </div>
@@ -83,7 +83,7 @@ export default function DashboardPage() {
                 Shipped Orders
               </div>
               <div className="mt-1 text-3xl font-semibold text-blue-600">
-                {orders?.filter((o: any) => o.status === 'SHIPPED').length || 0}
+                {orders?.filter((o: { status?: string }) => o.status === 'SHIPPED').length || 0}
               </div>
             </div>
           </div>
@@ -94,7 +94,7 @@ export default function DashboardPage() {
                 Delivered Orders
               </div>
               <div className="mt-1 text-3xl font-semibold text-green-600">
-                {orders?.filter((o: any) => o.status === 'DELIVERED').length || 0}
+                {orders?.filter((o: { status?: string }) => o.status === 'DELIVERED').length || 0}
               </div>
             </div>
           </div>
@@ -131,7 +131,7 @@ export default function DashboardPage() {
               </thead>
 
               <tbody className="bg-white divide-y divide-gray-200">
-                {orders?.map((order: any) => (
+                {orders?.map((order: { id: string; orderNumber?: string; customerId?: string; totalPrice?: number; status?: string; createdAt?: string }) => (
                   <tr key={order.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
                       {order.orderNumber}

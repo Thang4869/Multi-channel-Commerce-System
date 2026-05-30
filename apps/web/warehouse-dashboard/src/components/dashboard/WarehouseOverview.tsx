@@ -21,10 +21,10 @@ export default function WarehouseOverview() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchStats();
+    void fetchStats();
   }, [token]);
 
-  const fetchStats = async () => {
+  const fetchStats = () => {
     try {
       // In a real app, you'd fetch this from the API
       // For now, using mock data

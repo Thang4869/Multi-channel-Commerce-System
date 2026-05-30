@@ -42,7 +42,7 @@ export default function LoginPage() {
               {error}
             </div>
           )}
-          <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
+          <form className="mt-6 space-y-4" onSubmit={(e) => void handleSubmit(e)}>
             <input
               required
               type="email"
