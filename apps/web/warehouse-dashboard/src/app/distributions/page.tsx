@@ -29,10 +29,10 @@ export default function DistributionsPage() {
       return;
     }
 
-    fetchDistributions();
+    void fetchDistributions();
   }, [token, router]);
 
-  const fetchDistributions = async () => {
+  const fetchDistributions = () => {
     try {
       setLoading(true);
       // Mock data

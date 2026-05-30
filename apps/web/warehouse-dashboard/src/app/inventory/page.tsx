@@ -21,7 +21,7 @@ export default function InventoryPage() {
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState({ warehouse: '', status: 'all' });
+  // filter state not used yet
 
   useEffect(() => {
     if (!token) {
@@ -29,10 +29,10 @@ export default function InventoryPage() {
       return;
     }
 
-    fetchInventory();
+    void fetchInventory();
   }, [token, router]);
 
-  const fetchInventory = async () => {
+  const fetchInventory = () => {
     try {
       setLoading(true);
       // Mock data for now

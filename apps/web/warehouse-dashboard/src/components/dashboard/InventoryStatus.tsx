@@ -17,10 +17,10 @@ export default function InventoryStatus() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchInventory();
+    void fetchInventory();
   }, [token]);
 
-  const fetchInventory = async () => {
+  const fetchInventory = () => {
     try {
       // Mock data
       setInventory([
