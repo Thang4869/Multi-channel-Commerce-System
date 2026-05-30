@@ -38,88 +38,88 @@ jobs:
           - 6379:6379
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
 
-    - name: Cache Yarn
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.cache/yarn
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+      - name: Cache Yarn
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
-    - name: Set Yarn registry
-      run: yarn config set registry https://registry.npmjs.org
+      - name: Set Yarn registry
+        run: yarn config set registry https://registry.npmjs.org
 
-    - name: Install dependencies
-      run: yarn install --network-timeout 600000
-      env:
-        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=public
+      - name: Install dependencies
+        run: yarn install --network-timeout 600000
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=public
 
-    # Auth Service
-    - name: Lint Auth Service
-      run: cd services/auth-service && yarn lint || true
-      continue-on-error: true
+      # Auth Service
+      - name: Lint Auth Service
+        run: cd services/auth-service && yarn lint || true
+        continue-on-error: true
 
-    - name: Build Auth Service
-      run: cd services/auth-service && yarn build
-      env:
-        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=public
-        JWT_SECRET: test-secret
-        JWT_REFRESH_SECRET: test-refresh-secret
+      - name: Build Auth Service
+        run: cd services/auth-service && yarn build
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=public
+          JWT_SECRET: test-secret
+          JWT_REFRESH_SECRET: test-refresh-secret
 
-    # Order Service
-    - name: Lint Order Service
-      run: cd services/order-service && yarn lint || true
-      continue-on-error: true
+      # Order Service
+      - name: Lint Order Service
+        run: cd services/order-service && yarn lint || true
+        continue-on-error: true
 
-    - name: Build Order Service
-      run: cd services/order-service && yarn build
-      env:
-        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=order_schema
-        JWT_SECRET: test-secret
+      - name: Build Order Service
+        run: cd services/order-service && yarn build
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=order_schema
+          JWT_SECRET: test-secret
 
-    # Product Service
-    - name: Build Product Service
-      run: cd services/product-service && yarn build
-      env:
-        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=product_schema
+      # Product Service
+      - name: Build Product Service
+        run: cd services/product-service && yarn build
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=product_schema
 
-    # Inventory Service
-    - name: Build Inventory Service
-      run: cd services/inventory-service && yarn build
-      env:
-        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=inventory_schema
+      # Inventory Service
+      - name: Build Inventory Service
+        run: cd services/inventory-service && yarn build
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=inventory_schema
 
-    # Delivery Service
-    - name: Build Delivery Service
-      run: cd services/delivery-service && yarn build
-      env:
-        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=delivery_schema
+      # Delivery Service
+      - name: Build Delivery Service
+        run: cd services/delivery-service && yarn build
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=delivery_schema
 
-    # Warehouse Service
-    - name: Build Warehouse Service
-      run: cd services/warehouse-service && yarn build
-      env:
-        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=warehouse_schema
+      # Warehouse Service
+      - name: Build Warehouse Service
+        run: cd services/warehouse-service && yarn build
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=warehouse_schema
 
-    # Notification Service
-    - name: Build Notification Service
-      run: cd services/notification-service && yarn build
-      env:
-        DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=notification_schema
+      # Notification Service
+      - name: Build Notification Service
+        run: cd services/notification-service && yarn build
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/commerce_db?schema=notification_schema
 
-    # Warehouse Dashboard
-    - name: Build Warehouse Dashboard
-      run: cd apps/web/warehouse-dashboard && yarn build
-      env:
-        NEXT_PUBLIC_API_URL: http://localhost
+      # Warehouse Dashboard
+      - name: Build Warehouse Dashboard
+        run: cd apps/web/warehouse-dashboard && yarn build
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost
 
   docker-build:
     needs: lint-and-test
@@ -127,71 +127,71 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
-    - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
 
-    - name: Build Auth Service Image
-      uses: docker/build-push-action@v7
-      with:
-        context: .
-        file: services/auth-service/Dockerfile
-        push: false
-        tags: commerce/auth-service:latest
+      - name: Build Auth Service Image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: services/auth-service/Dockerfile
+          push: false
+          tags: commerce/auth-service:latest
 
-    - name: Build Order Service Image
-      uses: docker/build-push-action@v7
-      with:
-        context: .
-        file: services/order-service/Dockerfile
-        push: false
-        tags: commerce/order-service:latest
+      - name: Build Order Service Image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: services/order-service/Dockerfile
+          push: false
+          tags: commerce/order-service:latest
 
-    - name: Build Product Service Image
-      uses: docker/build-push-action@v7
-      with:
-        context: .
-        file: services/product-service/Dockerfile
-        push: false
-        tags: commerce/product-service:latest
+      - name: Build Product Service Image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: services/product-service/Dockerfile
+          push: false
+          tags: commerce/product-service:latest
 
-    - name: Build Inventory Service Image
-      uses: docker/build-push-action@v7
-      with:
-        context: .
-        file: services/inventory-service/Dockerfile
-        push: false
-        tags: commerce/inventory-service:latest
+      - name: Build Inventory Service Image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: services/inventory-service/Dockerfile
+          push: false
+          tags: commerce/inventory-service:latest
 
-    - name: Build Delivery Service Image
-      uses: docker/build-push-action@v7
-      with:
-        context: .
-        file: services/delivery-service/Dockerfile
-        push: false
-        tags: commerce/delivery-service:latest
+      - name: Build Delivery Service Image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: services/delivery-service/Dockerfile
+          push: false
+          tags: commerce/delivery-service:latest
 
-    - name: Build Warehouse Service Image
-      uses: docker/build-push-action@v7
-      with:
-        context: .
-        file: services/warehouse-service/Dockerfile
-        push: false
-        tags: commerce/warehouse-service:latest
+      - name: Build Warehouse Service Image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: services/warehouse-service/Dockerfile
+          push: false
+          tags: commerce/warehouse-service:latest
 
-    - name: Build Notification Service Image
-      uses: docker/build-push-action@v7
-      with:
-        context: .
-        file: services/notification-service/Dockerfile
-        push: false
-        tags: commerce/notification-service:latest
+      - name: Build Notification Service Image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: services/notification-service/Dockerfile
+          push: false
+          tags: commerce/notification-service:latest
 
-    - name: Build Warehouse Dashboard Image
-      uses: docker/build-push-action@v7
-      with:
-        context: .
-        file: apps/web/warehouse-dashboard/Dockerfile
-        push: false
-        tags: commerce/warehouse-dashboard:latest
+      - name: Build Warehouse Dashboard Image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: apps/web/warehouse-dashboard/Dockerfile
+          push: false
+          tags: commerce/warehouse-dashboard:latest
