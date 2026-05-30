@@ -23,7 +23,6 @@ COPY apps/web/warehouse-dashboard/package.json .
 RUN yarn install --production
 
 COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
 COPY apps/web/warehouse-dashboard/next.config.js .
 
 RUN addgroup -g 1001 -S nodejs && \
