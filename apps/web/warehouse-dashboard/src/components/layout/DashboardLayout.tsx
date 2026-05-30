@@ -12,10 +12,10 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { clearToken } = useAuthStore();
+  const { clearAuth } = useAuthStore();
 
   const handleLogout = () => {
-    clearToken();
+    clearAuth();
     router.push('/login');
   };
 
