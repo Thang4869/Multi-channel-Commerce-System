@@ -20,6 +20,12 @@
   "devDependencies": {
     "typescript": "5.3.3"
   },
+  "resolutions": {
+    "@tsconfig/node10": "npm:@tsconfig/node16@^1.0.2"
+  },
+  "overrides": {
+    "@tsconfig/node10": "@tsconfig/node16@^1.0.2"
+  },
   "markdownlintConfig": {
     "extends": "./config/.markdownlint.json"
   }
