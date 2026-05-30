@@ -20,12 +20,22 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await authApi.login(email, password);
-      const { accessToken, user } = response.data;
-      setAuth(accessToken, user);
-      router.push('/dashboard');
+      const result = await authApi.login(email, password);
+      const accessToken = result?.data?.accessToken;
+      const user = result?.data?.user;
+      if (accessToken && user) {
+        setAuth(accessToken, {
+          id: user.id,
+          fullName: user.fullName,
+          email: user.email,
+          roles: user.roles || [],
+        });
+        router.push('/dashboard');
+      } else {
+        setError('Invalid login response');
+      }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed');
+      setError('Login failed');
     } finally {
       setIsLoading(false);
     }

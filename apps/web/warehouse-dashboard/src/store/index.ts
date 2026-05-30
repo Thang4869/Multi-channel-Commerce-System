@@ -3,18 +3,19 @@
 // ============================================
 
 import { create } from 'zustand';
+import { UserDto, WarehouseStockDto, OrderDto } from '@commerce/types';
 
 interface AuthStore {
   token: string | null;
-  user: Record<string, any> | null;
-  setAuth: (token: string, user: Record<string, any>) => void;
+  user: UserDto | null;
+  setAuth: (token: string, user: UserDto) => void;
   clearAuth: () => void;
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
   token: typeof window !== 'undefined' ? localStorage.getItem('token') : null,
   user: null,
-  setAuth: (token: string, user: Record<string, any>) => {
+  setAuth: (token: string, user: UserDto) => {
     localStorage.setItem('token', token);
     set({ token, user });
   },
@@ -25,29 +26,29 @@ export const useAuthStore = create<AuthStore>((set) => ({
 }));
 
 interface WarehouseStore {
-  stocks: Record<string, any>[];
+  stocks: WarehouseStockDto[];
   isLoading: boolean;
-  setStocks: (stocks: Record<string, any>[]) => void;
+  setStocks: (stocks: WarehouseStockDto[]) => void;
   setLoading: (loading: boolean) => void;
 }
 
 export const useWarehouseStore = create<WarehouseStore>((set) => ({
   stocks: [],
   isLoading: false,
-  setStocks: (stocks: Record<string, any>[]) => set({ stocks }),
+  setStocks: (stocks: WarehouseStockDto[]) => set({ stocks }),
   setLoading: (isLoading: boolean) => set({ isLoading }),
 }));
 
 interface OrderStore {
-  orders: Record<string, any>[];
+  orders: OrderDto[];
   isLoading: boolean;
-  setOrders: (orders: Record<string, any>[]) => void;
+  setOrders: (orders: OrderDto[]) => void;
   setLoading: (loading: boolean) => void;
 }
 
 export const useOrderStore = create<OrderStore>((set) => ({
   orders: [],
   isLoading: false,
-  setOrders: (orders: Record<string, any>[]) => set({ orders }),
+  setOrders: (orders: OrderDto[]) => set({ orders }),
   setLoading: (isLoading: boolean) => set({ isLoading }),
 }));

@@ -9,14 +9,21 @@ import { v4 as uuid } from 'uuid';
 export class UserRepository implements IUserRepository {
   constructor(private readonly prisma: any) {}
 
-  private mapUserRoles(roles: string[] | UserRole[]): UserRole[] {
-    return roles as UserRole[];
+  private mapUserRoles(roles: Array<string | UserRole>): UserRole[] {
+    return roles.map((r) => r as UserRole);
   }
 
   private toDomainUser(user: any): User {
     return new User({
-      ...user,
-      roles: this.mapUserRoles(user.roles),
+      id: user.id,
+      email: user.email,
+      password: user.password,
+      fullName: user.fullName,
+      phone: user.phone,
+      roles: this.mapUserRoles(user.roles || []),
+      isActive: !!user.isActive,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     });
   }
 
@@ -82,14 +89,14 @@ export class UserRepository implements IUserRepository {
     };
   }
 
-  async addRole(userId: string, role: string): Promise<User> {
+  async addRole(userId: string, role: UserRole): Promise<User> {
     const user = await this.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }
 
-    if (!user.roles.includes(role as any)) {
-      user.roles.push(role as any);
+    if (!user.roles.includes(role)) {
+      user.roles.push(role);
 
       const updated = await this.prisma.user.update({
         where: { id: userId },
@@ -102,13 +109,13 @@ export class UserRepository implements IUserRepository {
     return user;
   }
 
-  async removeRole(userId: string, role: string): Promise<User> {
+  async removeRole(userId: string, role: UserRole): Promise<User> {
     const user = await this.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }
 
-    user.roles = user.roles.filter(r => r !== role);
+    user.roles = user.roles.filter((r) => r !== role);
 
     const updated = await this.prisma.user.update({
       where: { id: userId },

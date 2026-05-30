@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { DeliveryRepository } from '../infrastructure/repositories/delivery.repository';
+import { DeliveryStatus } from '@commerce/types';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -13,12 +14,14 @@ export class DeliveryService {
     const delivery = await this.repo.createDelivery({
       id: uuidv4(),
       orderId,
-      destLocationAddress: destAddress,
-      destLocationLat: destLat,
-      destLocationLng: destLng,
+      destinationLocation: {
+        latitude: destLat,
+        longitude: destLng,
+        address: destAddress,
+      },
       estimatedDeliveryTime: new Date(estimatedTime),
-      status: 'PENDING',
-      notes,
+      status: DeliveryStatus.PENDING,
+      notes: notes || '',
     });
 
     await this.repo.createTrackingEntry(delivery.id, {
@@ -27,6 +30,7 @@ export class DeliveryService {
       address: destAddress,
       status: 'PENDING',
       notes: 'Delivery created',
+      timestamp: new Date(),
     });
 
     return delivery;
@@ -45,11 +49,12 @@ export class DeliveryService {
     }
 
     await this.repo.createTrackingEntry(deliveryId, {
-      lat: lat || delivery.currentLocationLat,
-      lng: lng || delivery.currentLocationLng,
-      address: address || delivery.currentLocationAddress,
+      lat: lat ?? delivery.currentLocation?.latitude ?? 0,
+      lng: lng ?? delivery.currentLocation?.longitude ?? 0,
+      address: address ?? delivery.currentLocation?.address ?? '',
       status: newStatus,
       notes,
+      timestamp: new Date(),
     });
 
     if (newStatus === 'DELIVERED' || newStatus === 'FAILED') {

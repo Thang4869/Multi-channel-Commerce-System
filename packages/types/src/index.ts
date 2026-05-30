@@ -257,7 +257,7 @@ export interface NotificationDto {
   type: NotificationType;
   title: string;
   message: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   isRead: boolean;
   createdAt: Date;
 }
@@ -267,17 +267,17 @@ export interface SendNotificationRequest {
   type: NotificationType;
   title: string;
   message: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
 }
 
 // ========== API RESPONSE ==========
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: {
     code: string;
     message: string;
-    details?: any;
+    details?: unknown;
   };
   timestamp: Date;
 }

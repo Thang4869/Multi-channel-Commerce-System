@@ -8,13 +8,27 @@ type WarehouseCandidate = {
   available: number;
 };
 
+type InventoryLock = {
+  id: string;
+  productId: string;
+  stockId?: string;
+  orderId: string;
+  quantity: number;
+};
+
+type StoreCandidate = {
+  id: string;
+  storeId: string;
+  available: number;
+};
+
 @Injectable()
 export class InventoryService {
   private readonly logger = new Logger(InventoryService.name);
   constructor(private readonly repo: InventoryRepository) {}
 
   async lockStock(orderId: string, productId: string, quantity: number) {
-    const lock = await this.repo.createInventoryLock({ orderId, productId, quantity, status: 'PENDING' });
+    const lock = await this.repo.createInventoryLock({ orderId, productId, quantity, status: 'PENDING' }) as InventoryLock;
 
     // Try store first
     const store = await this.repo.findStoreWithAvailable(productId, quantity);
@@ -43,11 +57,18 @@ export class InventoryService {
   }
 
   async releaseLock(lockId: string) {
-    const lock: any = await this.repo.updateInventoryLock(lockId, { status: 'RELEASING' }).catch(() => null);
+    let lock: InventoryLock | null = null;
+    try {
+      lock = await this.repo.updateInventoryLock(lockId, { status: 'RELEASING' }) as InventoryLock;
+    } catch (e) {
+      // not found or error
+      return { success: false, reason: 'not_found' };
+    }
+
     if (!lock) return { success: false, reason: 'not_found' };
 
-    const warehouseCandidate = await this.repo.findWarehouseCandidates(lock.productId, 0);
-    const stock = warehouseCandidate?.find((s: any) => s.id === lock.stockId) ?? null;
+    const warehouseCandidates = (await this.repo.findWarehouseCandidates(lock.productId, 0)) as WarehouseCandidate[];
+    const stock = warehouseCandidates?.find((s) => s.id === lock.stockId) ?? null;
     if (stock) {
       await this.repo.releaseToWarehouse(stock.id, lock.quantity);
       await this.repo.updateInventoryLock(lockId, { status: 'RELEASED', releasedAt: new Date() });
@@ -56,7 +77,7 @@ export class InventoryService {
       return { success: true };
     }
 
-    const store = await this.repo.findStoreWithAvailable(lock.productId, 0);
+    const store = (await this.repo.findStoreWithAvailable(lock.productId, 0)) as StoreCandidate | null;
     if (store) {
       await this.repo.releaseToStore(store.id, lock.quantity);
       await this.repo.updateInventoryLock(lockId, { status: 'RELEASED', releasedAt: new Date() });

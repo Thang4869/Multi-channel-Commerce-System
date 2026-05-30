@@ -1,17 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { DeliveryDto, GeoLocation } from '@commerce/types';
 
 @Injectable()
 export class DeliveryRepository {
   constructor(private readonly prisma: any) {}
 
-  async createDelivery(data: any) {
+  async createDelivery(data: Partial<DeliveryDto> & { id: string; status: string; estimatedDeliveryTime: Date }) {
     return this.prisma.delivery.create({
       data,
     });
   }
 
-  async findDeliveryById(id: string) {
+  async findDeliveryById(id: string): Promise<DeliveryDto | null> {
     return this.prisma.delivery.findUnique({
       where: { id },
       include: { tracking: true },
@@ -44,7 +45,7 @@ export class DeliveryRepository {
     });
   }
 
-  async createTrackingEntry(deliveryId: string, data: any) {
+  async createTrackingEntry(deliveryId: string, data: { lat: number; lng: number; address: string; status: string; notes?: string; timestamp?: Date }) {
     return this.prisma.deliveryTracking.create({
       data: {
         deliveryId,
@@ -60,7 +61,7 @@ export class DeliveryRepository {
     });
   }
 
-  async listDeliveries(skip: number = 0, take: number = 10) {
+  async listDeliveries(skip: number = 0, take: number = 10): Promise<DeliveryDto[]> {
     return this.prisma.delivery.findMany({
       skip,
       take,

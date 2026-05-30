@@ -17,6 +17,9 @@
     "lint": "yarn workspaces run lint"
   }
   ,
+  "devDependencies": {
+    "typescript": "5.3.3"
+  },
   "markdownlintConfig": {
     "extends": "./config/.markdownlint.json"
   }
