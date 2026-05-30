@@ -6,9 +6,9 @@
       "DOM",
       "DOM.Iterable"
     ],
-    "module": "ESNext",
+    "module": "NodeNext",
     "skipLibCheck": true,
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
