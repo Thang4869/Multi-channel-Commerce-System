@@ -44,6 +44,7 @@ services:
       context: .
       dockerfile: services/auth-service/Dockerfile
     container_name: auth_service
+    read_only: true
     environment:
       NODE_ENV: development
       PORT: 3001
@@ -59,6 +60,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    tmpfs:
+      - /tmp
     volumes:
       - ./services/auth-service/src:/app/src
 

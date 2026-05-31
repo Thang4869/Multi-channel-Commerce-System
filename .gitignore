@@ -50,7 +50,6 @@ Thumbs.db
 *.db
 
 # Docker
-.dockerignore
 
 # Flutter
 build/

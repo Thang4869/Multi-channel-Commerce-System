@@ -2,20 +2,22 @@
 # DOCKERFILE - AUTH SERVICE
 # ============================================
 
-FROM node:22.22.3-bookworm-slim AS builder
+FROM node:22-bookworm-slim AS builder
 
 WORKDIR /app
 
-
 # Copy workspace manifests and shared types so Yarn resolves the local package.
 COPY package.json ./
+COPY yarn.lock ./
 COPY packages/types ./packages/types
 COPY services/auth-service/package.json ./services/auth-service/package.json
 COPY services/auth-service/tsconfig.json ./services/auth-service/tsconfig.json
 COPY services/auth-service/prisma ./services/auth-service/prisma
+
 RUN yarn install --frozen-lockfile --non-interactive
 
 WORKDIR /app/services/auth-service
+
 RUN npx prisma generate
 
 # Copy source
@@ -24,34 +26,20 @@ COPY services/auth-service/src ./src
 # Build
 RUN yarn build
 
-# Production stage
-FROM node:22.22.3-bookworm-slim
+FROM gcr.io/distroless/nodejs22-debian12
 
-WORKDIR /app
-
-# Install dumb-init for proper signal handling
-RUN apt-get update && apt-get install -y --no-install-recommends dumb-init && rm -rf /var/lib/apt/lists/*
-
-# Copy workspace manifests and shared types so runtime resolution matches build.
-COPY package.json ./
-COPY packages/types ./packages/types
-COPY services/auth-service/package.json ./services/auth-service/package.json
-COPY services/auth-service/prisma ./services/auth-service/prisma
-RUN yarn install --frozen-lockfile --non-interactive --production
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-
-# Copy built app
 WORKDIR /app/services/auth-service
+
+ENV NODE_ENV=production
+
+COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/services/auth-service/dist ./dist
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
-
-USER nodejs
+USER nonroot
 
 EXPOSE 3001
 
-ENTRYPOINT ["dumb-init", "--"]
-CMD ["node", "dist/main.js"]
+HEALTHCHECK --interval=30s --timeout=3s --start-period=20s --retries=3 \
+	CMD ["node", "-e", "fetch('http://127.0.0.1:3001/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"]
+
+CMD ["dist/main.js"]
