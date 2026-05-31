@@ -1,0 +1,16 @@
+**/node_modules
+.git
+.github
+coverage
+dist
+build
+.next
+out
+.nuxt
+.env
+.env.*
+*.log
+.vscode
+.idea
+tmp
+**/*.tsbuildinfo

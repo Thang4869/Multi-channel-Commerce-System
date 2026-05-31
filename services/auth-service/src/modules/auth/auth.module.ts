@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './interfaces/http/controllers/auth.controller';
 import { JwtStrategy } from './interfaces/http/strategies/jwt.strategy';
+import { HealthController } from './interfaces/http/controllers/health.controller';
 import { JwtAuthGuard, RolesGuard } from './interfaces/http/guards/auth.guard';
 import { LoginUseCase, RegisterUseCase, RefreshTokenUseCase, AssignRoleUseCase } from './application/use-cases';
 import { UserRepository, TokenRepository } from './infrastructure/repositories';
@@ -58,7 +59,7 @@ const prismaClient = new PrismaClient();
     RolesGuard,
     JwtStrategy,
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, HealthController],
   exports: [
     'IJwtService',
     'IUserRepository',
