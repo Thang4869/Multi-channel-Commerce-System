@@ -2,7 +2,7 @@
 # DOCKERFILE - NEXT.JS WAREHOUSE DASHBOARD
 # ============================================
 
-FROM node:22-alpine AS builder
+FROM node:22.22.3-bookworm-slim AS builder
 
 WORKDIR /app
 
@@ -13,11 +13,11 @@ COPY apps/web/warehouse-dashboard .
 
 RUN yarn build
 
-FROM node:22-alpine
+FROM node:22.22.3-bookworm-slim
 
 WORKDIR /app
 
-RUN apk add --no-cache dumb-init
+RUN apt-get update && apt-get install -y --no-install-recommends dumb-init && rm -rf /var/lib/apt/lists/*
 
 COPY apps/web/warehouse-dashboard/package.json .
 RUN yarn install --production
