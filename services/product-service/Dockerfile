@@ -2,7 +2,7 @@
 # DOCKERFILE - PRODUCT SERVICE
 # ============================================
 
-FROM node:22-alpine AS builder
+FROM node:22.22.3-bookworm-slim AS builder
 
 WORKDIR /app
 
@@ -22,11 +22,11 @@ COPY services/product-service/src ./src
 
 RUN yarn build
 
-FROM node:22-alpine
+FROM node:22.22.3-bookworm-slim
 
 WORKDIR /app
 
-RUN apk add --no-cache dumb-init
+RUN apt-get update && apt-get install -y --no-install-recommends dumb-init && rm -rf /var/lib/apt/lists/*
 
 
 # Copy workspace manifests and shared types so runtime resolution matches build.
