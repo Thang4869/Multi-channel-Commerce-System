@@ -1,123 +1,108 @@
 // ============================================
-// FLUTTER - API SERVICE
+// FLUTTER - MOCK API SERVICE
 // ============================================
 
-import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://localhost:3001'; // Update for production
-  final Dio _dio;
   final SharedPreferences? _prefs;
 
-  ApiService({required Dio dio, SharedPreferences? prefs})
-      : _dio = dio,
-        _prefs = prefs {
-    _setupInterceptors();
-  }
+  ApiService({dynamic dio, SharedPreferences? prefs}) : _prefs = prefs;
 
-  void _setupInterceptors() {
-    _dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) async {
-          final token = _prefs?.getString('auth_token');
-          if (token != null) {
-            options.headers['Authorization'] = 'Bearer $token';
-          }
-          options.headers['Content-Type'] = 'application/json';
-          return handler.next(options);
-        },
-        onResponse: (response, handler) {
-          return handler.next(response);
-        },
-        onError: (error, handler) async {
-          if (error.response?.statusCode == 401) {
-            // Token expired - refresh or redirect to login
-            await _prefs?.remove('auth_token');
-          }
-          return handler.next(error);
-        },
-      ),
-    );
-  }
+  static final List<Map<String, dynamic>> _deliveries = [
+    {
+      'id': 'del-001',
+      'orderId': 'ord-10001234',
+      'status': 'PENDING',
+      'destLocationAddress': '12 Nguyen Hue, District 1, Ho Chi Minh City',
+      'destLocationLat': 10.7769,
+      'destLocationLng': 106.7009,
+      'currentLocationAddress': 'Central Warehouse, Binh Tan',
+      'currentLocationLat': 10.7481,
+      'currentLocationLng': 106.6221,
+      'estimatedDeliveryTime':
+          DateTime.now().add(const Duration(hours: 3)).toIso8601String(),
+      'actualDeliveryTime': null,
+      'notes': 'Handle with care',
+      'createdAt': DateTime.now()
+          .subtract(const Duration(minutes: 20))
+          .toIso8601String(),
+      'updatedAt': DateTime.now().toIso8601String(),
+    },
+    {
+      'id': 'del-002',
+      'orderId': 'ord-10001235',
+      'status': 'ASSIGNED',
+      'destLocationAddress': '88 Le Loi, District 3, Ho Chi Minh City',
+      'destLocationLat': 10.7794,
+      'destLocationLng': 106.692,
+      'currentLocationAddress': 'Delivery Hub A',
+      'currentLocationLat': 10.7812,
+      'currentLocationLng': 106.6894,
+      'estimatedDeliveryTime': DateTime.now()
+          .add(const Duration(hours: 1, minutes: 30))
+          .toIso8601String(),
+      'actualDeliveryTime': null,
+      'notes': 'Call customer on arrival',
+      'createdAt':
+          DateTime.now().subtract(const Duration(hours: 1)).toIso8601String(),
+      'updatedAt': DateTime.now().toIso8601String(),
+    },
+  ];
 
-  // Auth APIs
   Future<Map<String, dynamic>> login({
     required String email,
     required String password,
   }) async {
-    try {
-      final response = await _dio.post(
-        '$baseUrl/auth/login',
-        data: {
-          'email': email,
-          'password': password,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final data = response.data as Map<String, dynamic>;
-        final token = data['accessToken'];
-        await _prefs?.setString('auth_token', token);
-        return data;
-      }
-      throw Exception('Login failed');
-    } on DioException catch (e) {
-      throw Exception(e.message ?? 'Network error');
-    }
+    final token = 'mock-token-$email';
+    await _prefs?.setString('auth_token', token);
+    return {
+      'accessToken': token,
+      'refreshToken': 'mock-refresh-token-$email',
+      'user': {
+        'id': 'user-shipper-001',
+        'email': email,
+        'fullName': 'Delivery Shipper',
+        'phone': '0909000111',
+        'roles': ['SHIPPER'],
+        'isActive': true,
+        'createdAt': DateTime.now().toIso8601String(),
+        'updatedAt': DateTime.now().toIso8601String(),
+      },
+    };
   }
 
-  // Delivery APIs
   Future<List<dynamic>> getDeliveries() async {
-    try {
-      final response = await _dio.get('$baseUrl/deliveries');
-      if (response.statusCode == 200) {
-        return response.data as List<dynamic>;
-      }
-      throw Exception('Failed to fetch deliveries');
-    } on DioException catch (e) {
-      throw Exception(e.message ?? 'Network error');
-    }
+    return List<Map<String, dynamic>>.from(_deliveries);
   }
 
   Future<Map<String, dynamic>> getDeliveryById(String deliveryId) async {
-    try {
-      final response = await _dio.get('$baseUrl/deliveries/$deliveryId');
-      if (response.statusCode == 200) {
-        return response.data as Map<String, dynamic>;
-      }
-      throw Exception('Failed to fetch delivery');
-    } on DioException catch (e) {
-      throw Exception(e.message ?? 'Network error');
-    }
+    final delivery = _deliveries.firstWhere(
+      (item) => item['id'] == deliveryId,
+      orElse: () => _deliveries.first,
+    );
+    return Map<String, dynamic>.from(delivery);
   }
 
   Future<void> updateDeliveryStatus({
     required String deliveryId,
     required String status,
-    required double lat,
-    required double lng,
     String? notes,
   }) async {
-    try {
-      final response = await _dio.patch(
-        '$baseUrl/deliveries/$deliveryId/status',
-        data: {
-          'status': status,
-          'currentLocation': {
-            'latitude': lat,
-            'longitude': lng,
-          },
-          'notes': notes,
-        },
-      );
-
-      if (response.statusCode != 200) {
-        throw Exception('Failed to update delivery status');
-      }
-    } on DioException catch (e) {
-      throw Exception(e.message ?? 'Network error');
+    final index = _deliveries.indexWhere((item) => item['id'] == deliveryId);
+    if (index == -1) {
+      throw Exception('Delivery not found');
     }
+
+    _deliveries[index] = {
+      ..._deliveries[index],
+      'status': status,
+      'notes': notes ?? _deliveries[index]['notes'],
+      'actualDeliveryTime': status == 'DELIVERED'
+          ? DateTime.now().toIso8601String()
+          : _deliveries[index]['actualDeliveryTime'],
+      'updatedAt': DateTime.now().toIso8601String(),
+    };
   }
 
   Future<void> logout() async {
