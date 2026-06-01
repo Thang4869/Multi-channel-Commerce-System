@@ -21,6 +21,8 @@ import {
   RefreshTokenUseCase,
   AssignRoleUseCase,
 } from '../../../application/use-cases';
+import { JwtAuthGuard, Roles, RolesGuard } from '../guards/auth.guard';
+import { UserRole } from '../../../domain/enums';
 
 @Controller('auth')
 export class AuthController {
@@ -56,11 +58,14 @@ export class AuthController {
   }
 
   @Get('me')
+  @UseGuards(JwtAuthGuard)
   async getCurrentUser(@Request() req: { user: any }): Promise<any> {
     return req.user;
   }
 
   @Patch('users/:userId/roles')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
   async assignRole(
     @Param('userId') userId: string,
     @Body() assignRoleDto: AssignRoleDto,

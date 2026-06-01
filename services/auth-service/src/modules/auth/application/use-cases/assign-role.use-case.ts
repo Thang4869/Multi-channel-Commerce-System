@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, UnauthorizedException, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from '../../domain/entities/user.entity';
 import { IUserRepository, IJwtService, IHashService, ITokenRepository } from '../interfaces';
 import { UserRole } from '../../domain/enums';
@@ -6,7 +6,10 @@ import { AuthResponseDto, UserResponseDto } from '../dto';
 
 @Injectable()
 export class AssignRoleUseCase {
-  constructor(private readonly userRepository: IUserRepository) {}
+  constructor(
+    @Inject('IUserRepository')
+    private readonly userRepository: IUserRepository,
+  ) {}
 
   async execute(userId: string, role: UserRole): Promise<UserResponseDto> {
     const user = await this.userRepository.findById(userId);

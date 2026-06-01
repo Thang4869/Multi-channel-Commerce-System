@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, UnauthorizedException, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, BadRequestException } from '@nestjs/common';
 import { User } from '../../domain/entities/user.entity';
 import { IUserRepository, IJwtService, IHashService, ITokenRepository } from '../interfaces';
 import { UserRole } from '../../domain/enums';
@@ -7,9 +7,13 @@ import { AuthResponseDto, UserResponseDto } from '../dto';
 @Injectable()
 export class RegisterUseCase {
   constructor(
+    @Inject('IUserRepository')
     private readonly userRepository: IUserRepository,
+    @Inject('IHashService')
     private readonly hashService: IHashService,
+    @Inject('IJwtService')
     private readonly jwtService: IJwtService,
+    @Inject('ITokenRepository')
     private readonly tokenRepository: ITokenRepository,
   ) {}
 

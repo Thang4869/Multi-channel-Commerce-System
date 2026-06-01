@@ -9,6 +9,7 @@ import { AuthModule } from './modules/auth/auth.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
+  app.setGlobalPrefix('api');
 
   // Enable validation
   app.useGlobalPipes(
