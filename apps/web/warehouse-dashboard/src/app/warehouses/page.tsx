@@ -92,14 +92,11 @@ export default function WarehousesPage() {
                     <span className="text-sm text-gray-600">Current Stock</span>
                     <span className="font-semibold">{warehouse.currentStock}</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                    <div
-                      className="bg-blue-600 h-2 rounded-full"
-                      style={{
-                        width: `${(warehouse.currentStock / warehouse.capacity) * 100}%`,
-                      }}
-                    ></div>
-                  </div>
+                  <progress
+                    className="mt-2 h-2 w-full overflow-hidden rounded-full [&::-moz-progress-bar]:bg-blue-600 [&::-webkit-progress-bar]:bg-gray-200 [&::-webkit-progress-value]:bg-blue-600"
+                    value={warehouse.currentStock}
+                    max={warehouse.capacity}
+                  />
                 </div>
               </div>
             ))}

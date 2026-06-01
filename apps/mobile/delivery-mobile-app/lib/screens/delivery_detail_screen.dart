@@ -4,7 +4,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
 import '../providers/providers.dart';
 
 class DeliveryDetailScreen extends ConsumerStatefulWidget {
@@ -29,17 +28,10 @@ class _DeliveryDetailScreenState extends ConsumerState<DeliveryDetailScreen> {
 
   Future<void> _updateDeliveryStatus(String newStatus) async {
     try {
-      // Get current location
-      final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
       final apiService = ref.read(apiServiceProvider);
       await apiService.updateDeliveryStatus(
         deliveryId: widget.deliveryId,
         status: newStatus,
-        lat: position.latitude,
-        lng: position.longitude,
         notes: notesController.text.isEmpty ? null : notesController.text,
       );
 
@@ -154,6 +146,42 @@ class _DeliveryDetailScreenState extends ConsumerState<DeliveryDetailScreen> {
               ),
               const SizedBox(height: 24),
 
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Mock route',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      const Row(
+                        children: [
+                          Icon(Icons.warehouse_outlined, size: 18),
+                          SizedBox(width: 8),
+                          Expanded(child: Text('Central Warehouse')),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      const Row(
+                        children: [
+                          Icon(Icons.route_outlined, size: 18),
+                          SizedBox(width: 8),
+                          Expanded(
+                              child: Text('Hub A -> Customer destination')),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
               // Notes
               TextField(
                 controller: notesController,
@@ -213,8 +241,8 @@ class _DeliveryDetailScreenState extends ConsumerState<DeliveryDetailScreen> {
     );
   }
 
-  Widget _buildInfoRow(BuildContext context, String label, String value,
-      IconData icon) {
+  Widget _buildInfoRow(
+      BuildContext context, String label, String value, IconData icon) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -4,20 +4,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
 import 'screens/login_screen.dart';
 import 'screens/deliveries_screen.dart';
 import 'screens/delivery_detail_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Request location permission
-  final permission = await Geolocator.requestPermission();
-  if (permission == LocationPermission.denied ||
-      permission == LocationPermission.deniedForever) {
-    print('Location permission denied');
-  }
 
   runApp(const ProviderScope(child: DeliveryApp()));
 }

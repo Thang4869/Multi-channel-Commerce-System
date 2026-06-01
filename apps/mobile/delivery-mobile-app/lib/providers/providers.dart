@@ -3,20 +3,19 @@
 // ============================================
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
 import '../models/models.dart';
 
 // Shared Preferences Provider
-final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) async {
+final sharedPreferencesProvider =
+    FutureProvider<SharedPreferences>((ref) async {
   return await SharedPreferences.getInstance();
 });
 
 // API Service Provider (simple version without SharedPreferences dependency)
 final apiServiceProvider = Provider<ApiService>((ref) {
-  final dio = Dio();
-  return ApiService(dio: dio, prefs: null);
+  return ApiService(dio: null, prefs: null);
 });
 
 // Auth State Provider
@@ -35,7 +34,8 @@ final deliveriesProvider = FutureProvider<List<Delivery>>((ref) async {
 });
 
 // Single Delivery Provider
-final deliveryProvider = FutureProvider.family<Delivery, String>((ref, id) async {
+final deliveryProvider =
+    FutureProvider.family<Delivery, String>((ref, id) async {
   final apiService = ref.watch(apiServiceProvider);
   final data = await apiService.getDeliveryById(id);
   return Delivery.fromJson(data);
@@ -81,7 +81,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       final response = await apiService.login(email: email, password: password);
       final user = User.fromJson(response['user']);
-      state = AuthState(user: user, isAuthenticated: true);
+      state = AuthState(user: user, isLoading: false, isAuthenticated: true);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }

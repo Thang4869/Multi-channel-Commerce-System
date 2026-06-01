@@ -1,14 +1,16 @@
-import { Injectable, BadRequestException, UnauthorizedException, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { User } from '../../domain/entities/user.entity';
 import { IUserRepository, IJwtService, IHashService, ITokenRepository } from '../interfaces';
-import { UserRole } from '../../domain/enums';
 import { AuthResponseDto, UserResponseDto } from '../dto';
 
 @Injectable()
 export class RefreshTokenUseCase {
   constructor(
+    @Inject('ITokenRepository')
     private readonly tokenRepository: ITokenRepository,
+    @Inject('IUserRepository')
     private readonly userRepository: IUserRepository,
+    @Inject('IJwtService')
     private readonly jwtService: IJwtService,
   ) {}
 

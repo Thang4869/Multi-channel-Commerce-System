@@ -26,7 +26,7 @@ export default function ProductDetailPage() {
     <AppShell>
       <div className="grid gap-10 lg:grid-cols-2">
         <div className="card p-6">
-          <div className="h-72 rounded-2xl" style={{ background: product.gradient }} />
+          <div className={`h-72 rounded-2xl ${product.gradientClass}`} />
           <div className="mt-6 flex items-center justify-between text-sm text-muted">
             <span>{product.rating.toFixed(1)} rating</span>
             <span>{product.stock} pairs available</span>

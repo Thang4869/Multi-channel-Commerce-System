@@ -222,12 +222,18 @@ services:
       - order-service
       - product-service
 
-  # API Gateway (Nginx)
-  nginx:
-    image: nginx:alpine
-    container_name: api_gateway
+  shoe-store-web:
+    build:
+      context: .
+      dockerfile: apps/web/shoe-store/Dockerfile
+    container_name: shoe_store_web
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api
     ports:
-      - "80:80"
+      - "3020:3020"
+    depends_on:
+      - auth-service
+      - product-service
 
   prometheus:
     image: prom/prometheus:latest
@@ -263,6 +269,11 @@ services:
       - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
     environment:
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+
+  # API Gateway (Nginx)
+  nginx:
+    image: nginx:alpine
+    container_name: api_gateway
     ports:
       - "80:80"
       - "443:443"

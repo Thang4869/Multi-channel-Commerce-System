@@ -37,6 +37,8 @@
   },
   "docker.languageserver.diagnostics.enabled": false,
   "docker.showExtensionRecommendations": false,
+  "docker.lsp.experimental.vulnerabilityScanning": false,
+  "docker.lsp.experimental.scout.criticalHighVulnerabilities": false,
   "[dockerfile]": {
     "editor.validate": false
   }
