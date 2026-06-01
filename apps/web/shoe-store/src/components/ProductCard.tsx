@@ -9,7 +9,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <div className="card flex h-full flex-col gap-4 p-5">
-      <div className="h-32 rounded-xl" style={{ background: product.gradient }} />
+      <div className={`h-32 rounded-xl ${product.gradientClass}`} />
       <div className="flex-1 space-y-2">
         <p className="text-xs uppercase tracking-[0.2em] text-muted">
           {product.category}

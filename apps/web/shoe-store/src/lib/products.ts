@@ -6,7 +6,7 @@ export type Product = {
   price: number;
   rating: number;
   stock: number;
-  gradient: string;
+  gradientClass: string;
 };
 
 export const products: Product[] = [
@@ -18,7 +18,7 @@ export const products: Product[] = [
     price: 129,
     rating: 4.7,
     stock: 24,
-    gradient: 'linear-gradient(135deg, #ffb347, #ff5f6d)',
+    gradientClass: 'bg-gradient-to-br from-[#ffb347] to-[#ff5f6d]',
   },
   {
     id: 'trail-crest',
@@ -28,7 +28,7 @@ export const products: Product[] = [
     price: 148,
     rating: 4.8,
     stock: 18,
-    gradient: 'linear-gradient(135deg, #6a9c89, #c4fcef)',
+    gradientClass: 'bg-gradient-to-br from-[#6a9c89] to-[#c4fcef]',
   },
   {
     id: 'city-knit',
@@ -38,7 +38,7 @@ export const products: Product[] = [
     price: 112,
     rating: 4.5,
     stock: 34,
-    gradient: 'linear-gradient(135deg, #ffc3a0, #ffafbd)',
+    gradientClass: 'bg-gradient-to-br from-[#ffc3a0] to-[#ffafbd]',
   },
   {
     id: 'retro-court',
@@ -48,7 +48,7 @@ export const products: Product[] = [
     price: 118,
     rating: 4.6,
     stock: 20,
-    gradient: 'linear-gradient(135deg, #fbc2eb, #a6c1ee)',
+    gradientClass: 'bg-gradient-to-br from-[#fbc2eb] to-[#a6c1ee]',
   },
   {
     id: 'aero-dash',
@@ -58,7 +58,7 @@ export const products: Product[] = [
     price: 164,
     rating: 4.9,
     stock: 12,
-    gradient: 'linear-gradient(135deg, #f857a6, #ff5858)',
+    gradientClass: 'bg-gradient-to-br from-[#f857a6] to-[#ff5858]',
   },
   {
     id: 'night-shift',
@@ -68,7 +68,7 @@ export const products: Product[] = [
     price: 136,
     rating: 4.4,
     stock: 16,
-    gradient: 'linear-gradient(135deg, #5f72be, #9b23ea)',
+    gradientClass: 'bg-gradient-to-br from-[#5f72be] to-[#9b23ea]',
   },
   {
     id: 'summit-roam',
@@ -78,7 +78,7 @@ export const products: Product[] = [
     price: 172,
     rating: 4.8,
     stock: 10,
-    gradient: 'linear-gradient(135deg, #11998e, #38ef7d)',
+    gradientClass: 'bg-gradient-to-br from-[#11998e] to-[#38ef7d]',
   },
   {
     id: 'studio-slip',
@@ -88,7 +88,7 @@ export const products: Product[] = [
     price: 98,
     rating: 4.3,
     stock: 28,
-    gradient: 'linear-gradient(135deg, #fceabb, #f8b500)',
+    gradientClass: 'bg-gradient-to-br from-[#fceabb] to-[#f8b500]',
   },
 ];
 

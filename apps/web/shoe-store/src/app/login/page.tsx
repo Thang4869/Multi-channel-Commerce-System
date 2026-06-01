@@ -21,8 +21,8 @@ export default function LoginPage() {
 
     try {
       const result = await authApi.login(email, password);
-      const accessToken = result?.data?.accessToken;
-      const user = result?.data?.user;
+      const accessToken = result?.accessToken;
+      const user = result?.user;
       if (accessToken && user) {
         setAuth(accessToken, {
           id: user.id,
